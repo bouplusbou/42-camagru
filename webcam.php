@@ -2,8 +2,8 @@
 
 if( isset($_POST['dst_img']) && isset($_POST['src_img']) && isset($_POST['placement_x']) && isset($_POST['placement_y']) ){
 
-	echo "OK\n";
-	echo $_POST['placement_x'];
+	// echo "OK\n";
+	// echo $_POST['placement_x'];
 	// sprintf("%s", $_POST['dst_img']);
 	$img = $_POST['dst_img'];
 	$img = str_replace('data:image/png;base64,', '', $img);
@@ -16,11 +16,9 @@ if( isset($_POST['dst_img']) && isset($_POST['src_img']) && isset($_POST['placem
 	// $imgl = base64_decode($img);
 
 
-
 	$imgl = "src_images/dst.png";
 	$img2 = "src_images/" . basename($_POST['src_img']);
 	
-	sprintf("%s %s\n", $imgl, $img2);
 	
 	$dest = imagecreatefrompng($imgl);
 	$src = imagecreatefrompng($img2);
