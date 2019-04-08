@@ -1,6 +1,41 @@
+<style>
+.video-wrap {
+	position: relative;
+}
+video {
+	width: 800px;
+}
+#sticker_container {
+	border: solid 1px lightgray;
+	border-radius: 15px;
+	padding: 20px;
+	width: 760px;
+	height: 100px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+#sticker_container > div {
+	margin: 0 10px;
+}
+#sticker_container > div > img {
+	height: 80px;
+}
+#overlay {
+	position: absolute;
+	top: 50;
+	left: 50;
+}
+
+</style>
+
 <!-- Stream video via webcam -->
 <div class="video-wrap">
     <video id="video" playsinline autoplay></video>
+</div>
+
+<div id="overlay">
+	<img src="succes.png" alt="">
 </div>
 
 <!-- Trigger canvas web API -->
@@ -8,18 +43,23 @@
     <button id="snap">Capture</button>
 </div>
 
-<!-- Webcam video snapshot -->
-<canvas id="canvas" width="1280" height="720"></canvas>
-
-
 <div id="sticker_container">
 	<div class="sticker">
-		<img src="cucumber.png" alt="" width="1280" height="720">
+		<img src="logo_artsy_blue.png" alt="">
 	</div>
 	<div class="sticker">
-		<img src="" alt="">
+		<img src="succes.png" alt="">
+	</div>
+	<div class="sticker">
+		<img src="favicon.png" alt="">
+	</div>
+	<div class="sticker">
+		<img src="troll.png" alt="">
 	</div>
 </div>
+
+<!-- Webcam video snapshot -->
+<canvas id="canvas" width="1280" height="720"></canvas>
 
 <div id="show64">
 

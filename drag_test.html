@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<style type="text/css">
+
+		.dragme {
+			position:relative;
+			width: 270px;
+			height: 200px;
+			cursor: move;
+		}
+		#draggable {
+			background-color: #ccc;
+			border: 1px solid #000;
+		}
+
+		#inside_only {
+			background-color: lightcyan;
+			height: 600px;
+			width: 1200px;
+		}
+	</style>
+	<script type="text/javascript">
+			function startDrag(e) {
+				console.log(e);
+				console.log(e.clientX);
+				console.log(e.clientY);
+				console.log(e.target);
+				// determine event object
+				if (!e) {
+					var e = window.event;
+				}
+	
+				// IE uses srcElement, others use target
+				var targ = e.target ? e.target : e.srcElement;
+	
+				if (targ.className != 'dragme') {return};
+				// calculate event X, Y coordinates
+					offsetX = e.clientX;
+					offsetY = e.clientY;
+	
+				// assign default values for top and left properties
+				if(!targ.style.left) { targ.style.left='0px'};
+				if (!targ.style.top) { targ.style.top='0px'};
+	
+				// calculate integer values for top and left 
+				// properties
+				coordX = parseInt(targ.style.left);
+				coordY = parseInt(targ.style.top);
+				drag = true;
+	
+				// move div element
+					document.onmousemove=dragDiv;
+	
+			}
+			function dragDiv(e) {
+				if (!drag) {return};
+				if (!e) { var e= window.event};
+				var targ=e.target?e.target:e.srcElement;
+				
+				//add condition to block the move
+				if (e.clientX > 1200)
+					targ.style.left='930px';
+				else
+					targ.style.left=coordX+e.clientX-offsetX+'px';
+				if (e.clientY > 600)
+					targ.style.top='400px';
+				else
+					targ.style.top=coordY+e.clientY-offsetY+'px';
+
+
+				// move div element
+				// targ.style.left=coordX+e.clientX-offsetX+'px';
+				// targ.style.top=coordY+e.clientY-offsetY+'px';
+				return false;
+			}
+			function stopDrag() {
+				drag=false;
+			}
+			window.onload = function() {
+				document.onmousedown = startDrag;
+				document.onmouseup = stopDrag;
+			}
+	
+	
+	</script>
+	
+	</head>
+	<body>
+		
+		
+		<div id="inside_only">
+			<img src="succes.png" alt="drag-and-drop image script" title="drag-and-drop image script" class="dragme">
+		</div>
+		
+</body>
+</html>
