@@ -2,7 +2,7 @@
 
 class Like {
 
-    private $id_user;
-    private $id_post;
+    // public $id_user;
+    // public $id_post;
 
 }

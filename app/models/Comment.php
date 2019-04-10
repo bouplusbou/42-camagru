@@ -2,9 +2,8 @@
 
 class Comment {
 
-    private $comment;
-    private $id_user;
-    private $id_post;
-
+    // public $comment;
+    // public $id_user;
+    // public $id_post;
 
 }

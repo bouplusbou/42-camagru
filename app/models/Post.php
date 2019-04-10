@@ -1,10 +1,11 @@
 <?php
 
+require 'App.php';
+
 class Post {
 
-    private $photo_path;
-    private $creation_date;
-    private $id_user;
-
+    public static function getAllPosts() {
+        return App::getDatabase()->query('SELECT * FROM posts', __CLASS__);
+    }
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-class DatabaseController {
+class Database {
 
     private $DB_NAME;
     private $DB_USER;
@@ -24,9 +24,9 @@ class DatabaseController {
         return $PDO;
     }
     
-    public function query($statement) {
+    public function query($statement, $class_name) {
        $req = $this->getPDO()->query($statement);
-       $data = $req->fetchAll(PDO::FETCH_OBJ);
+       $data = $req->fetchAll(PDO::FETCH_CLASS, $class_name);
        return $data;
     }
 }
