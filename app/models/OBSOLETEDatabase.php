@@ -29,4 +29,5 @@ class Database {
        $data = $req->fetchAll(PDO::FETCH_CLASS, $class_name);
        return $data;
     }
+
 }

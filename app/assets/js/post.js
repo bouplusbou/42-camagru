@@ -1,0 +1,162 @@
+let selected_sticker_src;
+
+/////////////////////////////////////////////////////////////////////////////// apply the right sticker
+        const stickers = document.getElementById('sticker_container');
+        const overlay = document.getElementById('overlay');
+        stickers.addEventListener("click", function() {
+            if (event.target.tagName == 'IMG') {
+                if (overlay.firstChild) {
+                    overlay.removeChild(overlay.firstChild);
+                }
+                let selected_sticker = document.createElement('img');
+                selected_sticker.setAttribute('src', event.target.src);
+                selected_sticker_src = event.target.src;
+                selected_sticker.setAttribute('id', 'selected_sticker');
+                selected_sticker.setAttribute('class', 'dragme');
+                overlay.append(selected_sticker);
+            }
+        });
+
+
+////////////////////////////////////////////////////////////////////////////////////// drag the sticker
+        function startDrag(e) {
+
+            // determine event object
+            if (!e) {
+                var e = window.event;
+            }
+        
+            // IE uses srcElement, others use target
+            var targ = e.target ? e.target : e.srcElement;
+        
+            if (targ.className != 'dragme') {return};
+            // calculate event X, Y coordinates
+                offsetX = e.clientX;
+                offsetY = e.clientY;
+        
+            // assign default values for top and left properties
+            if(!targ.style.left) { targ.style.left='0px'};
+            if (!targ.style.top) { targ.style.top='0px'};
+        
+            // calculate integer values for top and left 
+            // properties
+            coordX = parseInt(targ.style.left);
+            coordY = parseInt(targ.style.top);
+            drag = true;
+        
+            // move div element
+                document.onmousemove=dragDiv;
+        
+        }
+        function dragDiv(e) {
+            //check if concern img only
+            if (event.target.tagName != 'IMG')
+                return;
+            
+            
+            if (!drag) {return};
+            if (!e) { var e= window.event};
+            var targ=e.target?e.target:e.srcElement;
+
+            //add condition to block the move
+            if (e.clientX > 640)
+                targ.style.left='340px';
+            else
+                targ.style.left=coordX+e.clientX-offsetX+'px';
+            if (e.clientY > 480)
+                targ.style.top='180px';
+            else
+                targ.style.top=coordY+e.clientY-offsetY+'px';
+        
+        
+            // move div element
+            // targ.style.left=coordX+e.clientX-offsetX+'px';
+            // targ.style.top=coordY+e.clientY-offsetY+'px';
+            return false;
+        }
+        function stopDrag() {
+            drag=false;
+        }
+        window.onload = function() {
+            document.onmousedown = startDrag;
+            document.onmouseup = stopDrag;
+        }
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////// code
+    'use strict';
+    
+    const video = document.getElementById('video');
+    const snap = document.getElementById("snap");
+    const errorMsgElement = document.querySelector('span#errorMsg');
+    
+    const constraints = {
+        audio: false,
+        video: {
+            width: 640, 
+            height: 480
+        }
+    };
+    
+    // Access webcam
+    async function init() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia(constraints);
+            handleSuccess(stream);
+        } catch (e) {
+            errorMsgElement.innerHTML = `navigator.getUserMedia error:${e.toString()}`;
+        }
+    }
+    
+    // Success
+    function handleSuccess(stream) {
+        window.stream = stream;
+        video.srcObject = stream;
+    }
+    
+    
+    // Load init
+    init();
+    
+    // const show = document.getElementById("show64");
+    // const canvas = document.getElementById('canvas');
+    // var context = canvas.getContext('2d');
+    
+/////////////////////////////////////////////////////////////////////////////////////////// send to server
+
+    // Draw image
+    snap.addEventListener("click", function() {
+
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0, 640, 480);
+
+        // Save and send to the server
+        var dst_img = canvas.toDataURL();
+        // console.log(dst_img);
+        // let newImg = document.createElement("img");
+
+        // get the coord to position the src + the path
+        // console.log(selected_sticker.style.left);
+        var placement_x = parseInt(selected_sticker.style.left.length != 0 ? selected_sticker.style.left : 0, 10);
+        var placement_y = parseInt(selected_sticker.style.top.length != 0 ? selected_sticker.style.top : 0, 10);
+        var src_img = selected_sticker_src;
+
+        // send to the server using AJAX
+        var img_details = "placement_x="+placement_x+"&placement_y="+placement_y+"&dst_img="+dst_img+"&src_img="+src_img;
+        // console.log(img_details);
+        var ajx = new XMLHttpRequest();
+        ajx.onreadystatechange = function () {
+            if (ajx.readyState == 4 && ajx.status == 200) {
+                document.getElementById("message").innerHTML = ajx.responseText;
+            }
+        };
+        ajx.open("POST", "./app/controllers/WebcamController.php", true);
+        ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        ajx.send(img_details);
+    });

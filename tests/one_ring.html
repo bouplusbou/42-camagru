@@ -9,7 +9,7 @@
 		}
 		video {
 			width: 480px;
-			height: 600px;
+			height: 640px;
 		}
 		#sticker_container {
 			border: solid 1px lightgray;
@@ -76,7 +76,7 @@
 		</div>
 		
 		<!-- Webcam video snapshot -->
-		<canvas id="canvas" width="480" height="600"></canvas>
+		<canvas id="canvas" width="480" height="640"></canvas>
 		
 		<!-- <div id="show64">
 		
@@ -152,7 +152,7 @@
 					targ.style.left='180px';
 				else
 					targ.style.left=coordX+e.clientX-offsetX+'px';
-				if (e.clientY > 600)
+				if (e.clientY > 640)
 					targ.style.top='300px';
 				else
 					targ.style.top=coordY+e.clientY-offsetY+'px';
@@ -186,7 +186,7 @@
 		const constraints = {
 		  audio: false,
 		  video: {
-			width: 480, height: 600
+			width: 480, height: 640
 		  }
 		};
 		
@@ -215,7 +215,7 @@
 		// Draw image
 		var context = canvas.getContext('2d');
 		snap.addEventListener("click", function() {
-			context.drawImage(video, 0, 0, 480, 600);
+			context.drawImage(video, 0, 0, 480, 640);
 			
 			// Save and send to the server
 			var dst_img = canvas.toDataURL();
