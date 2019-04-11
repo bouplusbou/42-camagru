@@ -1,15 +1,13 @@
 <?php
 
-class Controller {
+require './app/models/Post.php';
 
-    protected $viewPath;
-    protected $template;
+function listPosts() {
+    $posts = Post::getAllPosts();
+    require './app/views/pages/galery.php';
+}
 
-    public function render($view) {
-        ob_start();
-        require($view->viewPath . str_replace('.', '/', $view) . '.php');
-        $content = ob_get_clean();
-        require($this->viewPath . 'templates/' . $this->template . '.php');
-    }
-
+function signup() {
+    // throw new Exception('Impossible d\'ajouter le commentaire !');
+    require './app/views/pages/signup.php';
 }

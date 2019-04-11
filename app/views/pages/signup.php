@@ -1,47 +1,38 @@
 <?php
 $errmsg = '';
-$errors = array();
-// if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-//     if ($_POST['submit'] !== "Create") {
-//         $errors[] = 'Invalid submit value';
-//     }
-//     if (strlen($_POST['email']) === 0) {
-//         $errors[] = 'Please enter your email.';
-//     } else if (is_valid_email($_POST['email']) == false) {
-//         $errors[] = 'Invalid email adress format.';
-//     }
-//     if (strlen($_POST['pswd']) === 0) {
-//         $errors[] = 'Please enter a password.';
-//     }
-    // if (check_user_existance($passwd_db, $_POST['email']) == true) {
-    //     $errors[] = 'There is already a user registered with that email.';
-    // }
-// }
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && count($errors) === 0) {
 
-    
-
-
-
-
-
-    header('Location: login.php');
-} else {
-    $errmsg = create_error_html($errors);
-}
 ?>
+<script>
+// function form_action(form_id) {
+//     form = document.getElementById(form_id);
+//     action = form.getAttribute('action');
+//     controller = action.split('.')[0];
+//     method = action.split('.')[1];
+//     url = './app/controllers/' + controller + '.php';
+//     console.log(url);
+//     input = document.createElement('input');
+//     input.setAttribute('type','hidden');
+//     input.setAttribute('name','action');
+//     input.setAttribute('value',method);
+//     form.appendChild(input);
+//     form.setAttribute('action', url);
+//     form.submit();
+// }
+
+</script>
 <h1>SIGNUP</h1>
-<div class="login-page">
+<div class="signup_page">
     <div class="form">
-        <form id="signup_form" action="signup.php" method="post">
+        <form id="form_create_user" action="./app/controllers/UserController.php" name="action" method="post">
             <input placeholder="username" type="text" value="" name="username" />
             <input placeholder="email" type="text" value="" name="email" />
             <input placeholder="password" type="password" value="" name="pswd" />
-            <input type="submit" value="Create" name="submit" />
+            <input type="submit" value="create" name="submit" />
         </form>
         <?php if ($errmsg !== ''):
             echo $errmsg;
         endif; ?>
-        <a href="login.php">Sign In</a>
+        <p>Already have an account ?</p>
+        <a href="index.php?p=login">Login</a>
     </div>
 </div>

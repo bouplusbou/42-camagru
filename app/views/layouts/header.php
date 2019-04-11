@@ -8,5 +8,7 @@
 </head>
 <body>
     <div id="header">
-        <p>Header</p>
+        <p>Camagru</p>
+        <a href="index.php?p=login">Login</a>
+        <a href="index.php?p=signup">Signup</a>
     </div>

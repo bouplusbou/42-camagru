@@ -1,25 +1,17 @@
 <?php
 
 if (isset($_GET['p'])) {
-    $p = $_GET['p'];
-} else {
-    $p = 'home';
+    $title = $_GET['p'];
 }
 
-ob_start();
-if ($p === 'home') {
-    require 'app/controllers/PostsController.php';
-    $controller = new PostsController();
-    $controller->index();
-} elseif ($p === 'login') {
-    require './app/views/pages/login.php';
-} elseif ($p === 'galery') {
-    require 'app/controllers/PostsController.php';
-    $controller = new PostsController();
-    $controller->index();
-} elseif ($p === 'signup') {
-    require './app/views/pages/signup.php';
+require 'app/views/layouts/header.php';
+require 'app/controllers/Controller.php';
+
+if (isset($_GET['p'])) {
+    if ($_GET['p'] === 'signup')
+        signup();
+    if ($_GET['p'] === 'galery')
+        listPosts();
 }
-$content = ob_get_clean();
-$title = $p;
-require './app/views/layouts/default.php';
+
+require 'app/views/layouts/footer.php';
