@@ -13,6 +13,9 @@
 <body>
     <div id="header">
         <p>Camagru</p>
+        <?php if ($title !== 'galery') { ?>
+            <a href="index.php?p=galery">Galery</a>
+        <?php } ?>
         <?php if (isset($_SESSION['username'])) { ?>
             <a href="index.php?p=post">Post</a>
             <a href="index.php?p=logout">Logout</a>

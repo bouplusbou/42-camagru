@@ -154,9 +154,41 @@ let selected_sticker_src;
         ajx.onreadystatechange = function () {
             if (ajx.readyState == 4 && ajx.status == 200) {
                 document.getElementById("message").innerHTML = ajx.responseText;
+                getThumbnails();
+                
             }
         };
         ajx.open("POST", "./app/controllers/WebcamController.php", true);
         ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         ajx.send(img_details);
+
+        
+
     });
+
+//////////////////////////////////////////// load thumbnails
+
+
+function getThumbnails () {
+    var ajx = new XMLHttpRequest();
+    ajx.onreadystatechange = function () {
+        if (ajx.readyState == 4 && ajx.status == 200) {
+            let thumbName = ajx.responseText;
+            addLastThumbnail(thumbName);
+        }
+    }
+    ajx.open('GET', './app/controllers/thumbnails.php', true);
+    ajx.send();
+}
+
+function addLastThumbnail (thumbName) {
+    const thumbCont = document.getElementById('thumbnails_container');
+    let lastThumb = document.createElement('img');
+    let src = "./app/assets/images/post_img/"+thumbName;
+    lastThumb.setAttribute('src', src);
+    thumbCont.appendChild(lastThumb);
+
+}
+
+
+    

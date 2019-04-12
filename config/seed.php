@@ -32,16 +32,16 @@ try {
         print("User $user[0] created.\n");
     }
     
-    $req = $PDO->prepare("INSERT INTO posts (photo_path, creation_date, id_user) VALUES (:photo_path, :creation_date, :id_user)");
+    $req = $PDO->prepare("INSERT INTO posts (photo_name, creation_date, id_user) VALUES (:photo_name, :creation_date, :id_user)");
     $posts = array(
-        array('./app/assets/images/posts_images/final.png', '2019-03-01 00:00:00', '1'),
-        array('./app/assets/images/posts_images/final.png', '2019-05-01 00:00:00', '2'),
-        array('./app/assets/images/posts_images/final.png', '2019-01-01 00:00:00', '1'),
-        array('./app/assets/images/posts_images/final.png', '2019-02-01 00:00:00', '3'),
+        array('1555055884.png', '2019-03-01 00:00:00', '1'),
+        array('1555055910.png', '2019-05-01 00:00:00', '2'),
+        array('1555055917.png', '2019-01-01 00:00:00', '1'),
+        array('1555055925.png', '2019-02-01 00:00:00', '3'),
     );
     foreach ($posts as $post) {
         $req->execute(array(
-                "photo_path" => $post[0], 
+                "photo_name" => $post[0], 
                 "creation_date" => $post[1],
                 "id_user" => $post[2],
                 ));

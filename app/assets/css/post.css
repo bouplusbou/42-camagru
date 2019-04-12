@@ -39,3 +39,19 @@ video {
     height: 300px;
     cursor: move;
 }
+
+
+#thumbnails_container {
+    border: solid 1px lightgray;
+    border-radius: 15px;
+	height: 600px;
+	width: 200px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+#thumbnails_container > img {
+	width: 80%;
+	margin: 10px 0;
+}

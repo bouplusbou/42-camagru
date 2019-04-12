@@ -28,7 +28,7 @@ try {
 
     $table = "users";
     $sql ="CREATE table $table(
-    id SMALLINT( 11 ) AUTO_INCREMENT PRIMARY KEY,
+    id_user SMALLINT( 11 ) AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR( 40 ) NOT NULL, 
     email VARCHAR( 255 ) NOT NULL, 
     pswd CHAR( 128 ) NOT NULL,
@@ -39,33 +39,33 @@ try {
 
     $table = "posts";
     $sql ="CREATE table $table(
-    id SMALLINT( 11 ) AUTO_INCREMENT PRIMARY KEY,
-    photo_path VARCHAR( 500 ) NOT NULL, 
+    id_post SMALLINT( 11 ) AUTO_INCREMENT PRIMARY KEY,
+    photo_name VARCHAR( 500 ) NOT NULL, 
     creation_date DATETIME NOT NULL,
     id_user SMALLINT( 11 ),
-    FOREIGN KEY (id_user) REFERENCES users(id) )";
+    FOREIGN KEY (id_user) REFERENCES users(id_user) )";
     $db->exec($sql);
     print("Created $table table.\n");
 
     $table = "comments";
     $sql ="CREATE table $table(
-    id SMALLINT( 11 ) AUTO_INCREMENT PRIMARY KEY,
+    id_comment SMALLINT( 11 ) AUTO_INCREMENT PRIMARY KEY,
     comment VARCHAR( 8000 ) NOT NULL, 
-    creationdate DATETIME NOT NULL,
-    id_user_comment SMALLINT( 11 ),
-    FOREIGN KEY (id_user_comment) REFERENCES users(id),
-    id_post_comment SMALLINT( 11 ),
-    FOREIGN KEY (id_post_comment) REFERENCES posts(id) )";
+    creation_date DATETIME NOT NULL,
+    id_user SMALLINT( 11 ),
+    FOREIGN KEY (id_user) REFERENCES users(id_user),
+    id_post SMALLINT( 11 ),
+    FOREIGN KEY (id_post) REFERENCES posts(id_post) )";
     $db->exec($sql);
     print("Created $table table.\n");
 
     $table = "likes";
     $sql ="CREATE table $table(
-    id SMALLINT( 11 ) AUTO_INCREMENT PRIMARY KEY,
-    id_user_like SMALLINT( 11 ),
-    FOREIGN KEY (id_user_like) REFERENCES users(id),
-    id_post_like SMALLINT( 11 ),
-    FOREIGN KEY (id_post_like) REFERENCES posts(id) )";
+    id_like SMALLINT( 11 ) AUTO_INCREMENT PRIMARY KEY,
+    id_user SMALLINT( 11 ),
+    FOREIGN KEY (id_user) REFERENCES users(id_user),
+    id_post SMALLINT( 11 ),
+    FOREIGN KEY (id_post) REFERENCES posts(id_post) )";
     $db->exec($sql);
     print("Created $table table.\n");
 

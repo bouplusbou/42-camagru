@@ -1,5 +1,7 @@
 <?php
 
+$title = 'home';
+
 if (isset($_GET['p'])) {
     $title = $_GET['p'];
     $css = './app/assets/css/'.$title.'.css';
@@ -20,6 +22,8 @@ if (isset($_GET['p'])) {
         logout();
     if ($_GET['p'] === 'post')
         newPost();
+    if ($_GET['p'] === 'viewPost')
+        viewPost($_GET['id']);
 } else {
     listPosts();
 }

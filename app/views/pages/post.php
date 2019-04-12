@@ -12,24 +12,19 @@
 </div>
 
 <div id="sticker_container">
+<?php foreach ($stickers as $sticker): ?>
 	<div class="sticker">
-		<img src="./app/assets/images/stickers/grumpy.png" alt="">
+    	<img src="<?= './app/assets/images/stickers/'.$sticker.'.png'; ?>" alt="">
 	</div>
-	<div class="sticker">
-		<img src="./app/assets/images/stickers/fries.png" alt="">
-	</div>
-	<div class="sticker">
-		<img src="./app/assets/images/stickers/hands.png" alt="">
-	</div>
-	<div class="sticker">
-		<img src="./app/assets/images/stickers/thug.png" alt="">
-	</div>
-	<div class="sticker">
-		<img src="./app/assets/images/stickers/pate.png" alt="">
-	</div>
-	<div class="sticker">
-		<img src="./app/assets/images/stickers/beard.png" alt="">
-	</div>
+<?php endforeach; ?>
+</div>
+
+
+<div id="thumbnails_container">
+<?php foreach ($posts as $post): 
+	if ($post->id_user === $_SESSION['id_user']) {?>
+    <img src="<?= './app/assets/images/post_img/'.$post->photo_name; ?>" alt="">
+<?php } endforeach; ?>
 </div>
 
 <!-- Webcam video snapshot -->

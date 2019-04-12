@@ -1,4 +1,7 @@
 <?php
+session_start();
+
+// var_dump(__DIR__);
 
 if( isset($_POST['dst_img']) && isset($_POST['src_img']) && isset($_POST['placement_x']) && isset($_POST['placement_y']) ){
 	// echo "OK\n";
@@ -6,11 +9,11 @@ if( isset($_POST['dst_img']) && isset($_POST['src_img']) && isset($_POST['placem
 	$img = $_POST['dst_img'];
 	$img = str_replace('data:image/png;base64,', '', $img);
 	$img = str_replace(' ', '+', $img);
-	$fileData = base64_decode($img);
+	$filedata = base64_decode($img);
 
 	//saving
-	$fileName = '../assets/images/post_img/dst.png';
-	file_put_contents($fileName, $fileData);
+	$filename = '../assets/images/post_img/dst.png';
+	file_put_contents($filename, $filedata);
 
 	// $img1 = base64_decode($img);
 
@@ -26,7 +29,7 @@ if( isset($_POST['dst_img']) && isset($_POST['src_img']) && isset($_POST['placem
 	$src_x = imagesx($src);
 	$src_y = imagesy($src);
 
-	echo $src_x." ".$src_y;
+	// echo $src_x." ".$src_y;
 
 	$placement_x = intval($_POST['placement_x']);
 	$placement_y = intval($_POST['placement_y']);
@@ -35,11 +38,24 @@ if( isset($_POST['dst_img']) && isset($_POST['src_img']) && isset($_POST['placem
 
 
 	// Output and free from memory
-	$fileName = '../assets/images/post_img/final1.png';
-	imagepng($dest, $fileName);
+	$timestamp = time();
+	$filename = $timestamp.'.png';
+	$filepath = '../assets/images/post_img/'.$filename;
+	imagepng($dest, $filepath);
+
+	require 'PostsController.php';
+	// require './app/controllers/PostsControllers.php';
+	createPost($filename, $_SESSION['id_user']);
 
 	imagedestroy($dest);
 	imagedestroy($src);
+
+
+// save image with unique name timestamp
+// insert into db
+
+
+
 } else {
 	print_r($_POST);;
 }

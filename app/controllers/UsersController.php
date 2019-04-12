@@ -21,7 +21,9 @@ function login() {
 
 function loginAttempt($user_cred) {
     if ($user = User::userExists($user_cred)) {
+        // var_dump($user);
         $_SESSION['username'] = $user['username'];
+        $_SESSION['id_user'] = $user['id_user'];
         header('Location: index.php');
     } else {
         echo "Sorry wrong username or password\n";
