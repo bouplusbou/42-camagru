@@ -11,7 +11,10 @@
         <p>1540 Likes</p>
         <div id="comments_container">
         <?php foreach ($comments as $comment): ?>
-            <p><b><?= $comment['username']; ?></b> <?= $comment['comment']; ?></p>
+            <div class="comment">
+                <b><?= $comment['username']; ?></b>
+                <p> <?= $comment['comment']; ?></p>
+            </div>
         <?php endforeach; ?>
         </div>
 		<input placeholder="Type your comment here..." type="text" value="" name="comment" id="comment_input" />
@@ -19,8 +22,12 @@
     </div>
 </div>
 
-<!-- // append it to comments section -->
-
 <div id="message" style="color:red;"></div>
 
+<script type="text/javascript">
+<?php if (isset($_SESSION['username']) && isset($_SESSION['id_user'])) { ?>
+    let currentUsername = "<?= $_SESSION['username']; ?>";
+    let currentUserID = "<?= $_SESSION['id_user']; ?>";
+<?php } ?>
+</script>
 <script type="text/javascript" src="./app/assets/js/viewPost.js"></script>

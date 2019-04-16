@@ -1,5 +1,13 @@
 <?php
 
+if (isset($_POST['action']) && $_POST['action'] = 'create_like') {
+    require __DIR__.'/../models/Like.php';
+    if (isset($_POST['id_post']) && isset($_POST['id_user'])) {
+        Like::newLike($_POST['id_post'], $_POST['id_user']);
+    }
+}
+
+
 function newPost() {
     $stickers = array('beard', 'fries', 'grumpy', 'hands', 'pate', 'thug');
     require './app/models/Post.php';
@@ -27,4 +35,3 @@ function viewPost($id_post) {
     $comments = Comment::getComments($id_post);
     require './app/views/pages/viewPost.php';
 }
-

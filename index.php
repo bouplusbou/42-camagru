@@ -1,5 +1,4 @@
 <?php
-
 $title = 'home';
 
 if (isset($_GET['p'])) {
