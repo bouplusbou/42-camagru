@@ -13,21 +13,23 @@ try {
     $PDO = new PDO($DB_DSN, $DB_USER, $DB_PASSWORD);
     $PDO->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 
-    
-    $req = $PDO->prepare("INSERT INTO users (username, email, pswd, confirmed, creation_date) VALUES (:username, :email, :pswd, :confirmed, :creation_date)");
+    $password = password_hash('password', PASSWORD_BCRYPT);
+    $verif_hash = md5(uniqid(rand(), true));
+    $req = $PDO->prepare("INSERT INTO users (username, email, pswd, verif_hash, confirmed, creation_date) VALUES (:username, :email, :pswd, :verif_hash, :confirmed, :creation_date)");
     $users = array(
-        array('boris', 'boris@gmail.com', 'password', '1', '2019-04-01 00:00:00'),
-        array('frankie', 'frankie@gmail.com', 'password', '0', '2018-04-01 00:00:00'),
-        array('lou', 'lou@gmail.com', 'password', '1', '2017-04-01 00:00:00'),
-        array('charlie', 'charlie@gmail.com', 'password', '1', '2016-04-01 00:00:00')
+        array('boris', 'boris@gmail.com', $password, $verif_hash, '1', '2019-04-01 00:00:00'),
+        array('frankie', 'frankie@gmail.com', $password, $verif_hash, '0', '2018-04-01 00:00:00'),
+        array('lou', 'lou@gmail.com', $password, $verif_hash, '1', '2017-04-01 00:00:00'),
+        array('charlie', 'charlie@gmail.com', $password, $verif_hash, '1', '2016-04-01 00:00:00')
     );
     foreach ($users as $user) {
         $req->execute(array(
             "username" => $user[0], 
             "email" => $user[1],
             "pswd" => $user[2],
-            "confirmed" => $user[3],
-            "creation_date" => $user[4],
+            "verif_hash" => $user[3],
+            "confirmed" => $user[4],
+            "creation_date" => $user[5]
         ));
         print("User $user[0] created.\n");
     }
@@ -37,7 +39,7 @@ try {
         array('1555055884.png', '2019-03-01 00:00:00', '1'),
         array('1555055910.png', '2019-05-01 00:00:00', '2'),
         array('1555055917.png', '2019-01-01 00:00:00', '1'),
-        array('1555055925.png', '2019-02-01 00:00:00', '3'),
+        array('1555055925.png', '2019-02-01 00:00:00', '3')
     );
     foreach ($posts as $post) {
         $req->execute(array(
@@ -51,5 +53,3 @@ try {
 } catch (PDOException $e) {
     die("DB ERROR: ". $e->getMessage());
 }
-
-

@@ -32,6 +32,7 @@ try {
     username VARCHAR( 40 ) NOT NULL, 
     email VARCHAR( 255 ) NOT NULL, 
     pswd CHAR( 128 ) NOT NULL,
+    verif_hash VARCHAR( 50 ) NOT NULL,
     confirmed TINYINT( 1 ) NOT NULL,
     creation_date DATETIME NOT NULL )";
     $db->exec($sql);

@@ -23,6 +23,8 @@ if (isset($_GET['p'])) {
         newPost();
     if ($_GET['p'] === 'viewPost')
         viewPost($_GET['id']);
+    if ($_GET['p'] === 'confirmation')
+        confirmation($_GET['email'], $_GET['hash']);
 } else {
     listPosts();
 }
