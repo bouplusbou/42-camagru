@@ -21,10 +21,14 @@ if (isset($_GET['p'])) {
         logout();
     if ($_GET['p'] === 'post')
         newPost();
+    if ($_GET['p'] === 'account')
+        account();
     if ($_GET['p'] === 'viewPost')
         viewPost($_GET['id']);
     if ($_GET['p'] === 'confirmation')
         confirmation($_GET['email'], $_GET['hash']);
+    if ($_GET['p'] === 'resetEmail')
+        resetEmail($_GET['email'], $_GET['hash']);
 } else {
     listPosts();
 }

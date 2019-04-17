@@ -17,7 +17,7 @@ resetBtn.addEventListener("click", function() {
             ajx.open("POST", "./app/controllers/UsersController.php", true);
             ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             ajx.send(resetInfo);
-            window.alert("An email has been sent to " + email + " to reset your password");
+            window.alert("If the address " + email + " is related to a Camagru account, an email has been sent to reset your password");
         } else {
             window.alert("Please enter a proper email if you want to reset your password");
         }

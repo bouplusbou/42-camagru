@@ -19,5 +19,6 @@ endif; ?>
 	</div>
 </div>
 
+<div id="message" style="color:red;"></div>
 
 <script type="text/javascript" src="./app/assets/js/login.js"></script>
