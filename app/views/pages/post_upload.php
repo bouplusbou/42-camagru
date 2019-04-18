@@ -1,15 +1,22 @@
-<h1>NEW POST</h1>
+<h1>NEW POST WITH IMG</h1>
 
-<!-- Stream video via webcam -->
-<div class="video-wrap">
-	<video id="video" playsinline autoplay></video>
-	<div id="overlay"></div>
+<div class="img_wrap">
+	<img id='uploaded_img' src="<?= './app/assets/images/user_img/'.$filename ?>" alt="">
+    <div id="overlay"></div>
 </div>
 
-<!-- Trigger canvas web API -->
 <div id="control">
 	<!-- <button id="snap">Capture</button> -->
 </div>
+
+<a href="index.php?p=post_webcam">Use webcam</a>
+
+<form method="post" action="index.php?p=post_upload" enctype="multipart/form-data">
+     <label for="img">Upload an image (PNG only | max. 1 Mo) :</label><br />
+     <input type="file" name="img" id="img" /><br />
+     <input type="hidden" name="MAX_FILE_SIZE" value="1048576" />
+     <input type="submit" name="submit" value="Envoyer" />
+</form>
 
 <div id="sticker_container">
 <?php foreach ($stickers as $sticker): ?>
@@ -34,4 +41,4 @@
     let currentUserID = "<?= $_SESSION['id_user']; ?>";
 </script>
 <?php } ?>
-<script type="text/javascript" src="./app/assets/js/post.js"></script>
+<script type="text/javascript" src="./app/assets/js/postUpload.js"></script>

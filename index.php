@@ -19,7 +19,7 @@ if (isset($_GET['p'])) {
         login();
     if ($_GET['p'] === 'logout')
         logout();
-    if ($_GET['p'] === 'post')
+    if ($_GET['p'] === 'post_webcam')
         newPost();
     if ($_GET['p'] === 'account')
         account();
@@ -29,6 +29,8 @@ if (isset($_GET['p'])) {
         confirmation($_GET['email'], $_GET['hash']);
     if ($_GET['p'] === 'resetEmail')
         resetEmail($_GET['email'], $_GET['hash']);
+    if ($_GET['p'] === 'post_upload')
+        uploadImg();
 } else {
     listPosts();
 }

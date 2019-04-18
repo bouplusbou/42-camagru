@@ -1,0 +1,57 @@
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+.img_wrap {
+    position: relative;
+}
+.uploaded_img {
+    width: 640px;
+    height: 480px;
+    background-color: black;
+}
+
+#sticker_container {
+    border: solid 1px lightgray;
+    border-radius: 15px;
+    padding: 20px;
+    width: 760px;
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#sticker_container > div {
+    margin: 0 10px;
+}
+#sticker_container > div > img {
+    height: 80px;
+}
+#overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.dragme {
+    position:relative;
+    width: 300px;
+    height: 300px;
+    cursor: move;
+}
+
+
+#thumbnails_container {
+    border: solid 1px lightgray;
+    border-radius: 15px;
+	height: 600px;
+	width: 200px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+#thumbnails_container > img {
+	width: 80%;
+	margin: 10px 0;
+}
