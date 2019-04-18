@@ -32,4 +32,12 @@
 
 <div id="message" style="color:red;"></div>
 
+
+
+<?php if (isset($_SESSION['username']) && isset($_SESSION['id_user'])) { ?>
+<script type="text/javascript">
+    let currentUsername = "<?= $_SESSION['username']; ?>";
+    let currentUserID = "<?= $_SESSION['id_user']; ?>";
+</script>
+<?php } ?>
 <script type="text/javascript" src="./app/assets/js/post.js"></script>

@@ -15,12 +15,12 @@ try {
 
     $password = password_hash('password', PASSWORD_BCRYPT);
     $verif_hash = md5(uniqid(rand(), true));
-    $req = $PDO->prepare("INSERT INTO users (username, email, pswd, verif_hash, confirmed, creation_date) VALUES (:username, :email, :pswd, :verif_hash, :confirmed, :creation_date)");
+    $req = $PDO->prepare("INSERT INTO users (username, email, pswd, verif_hash, confirmed, email_when_comment, creation_date) VALUES (:username, :email, :pswd, :verif_hash, :confirmed, :email_when_comment, :creation_date)");
     $users = array(
-        array('boris', 'boris@gmail.com', $password, $verif_hash, '1', '2019-04-01 00:00:00'),
-        array('frankie', 'frankie@gmail.com', $password, $verif_hash, '0', '2018-04-01 00:00:00'),
-        array('lou', 'lou@gmail.com', $password, $verif_hash, '1', '2017-04-01 00:00:00'),
-        array('charlie', 'charlie@gmail.com', $password, $verif_hash, '1', '2016-04-01 00:00:00')
+        array('boris', 'boris@gmail.com', $password, $verif_hash, '1', '0', '2019-04-01 00:00:00'),
+        array('frankie', 'frankie@gmail.com', $password, $verif_hash, '0', '0', '2018-04-01 00:00:00'),
+        array('lou', 'lou@gmail.com', $password, $verif_hash, '1', '0', '2017-04-01 00:00:00'),
+        array('charlie', 'charlie@gmail.com', $password, $verif_hash, '1', '0', '2016-04-01 00:00:00')
     );
     foreach ($users as $user) {
         $req->execute(array(
@@ -29,7 +29,8 @@ try {
             "pswd" => $user[2],
             "verif_hash" => $user[3],
             "confirmed" => $user[4],
-            "creation_date" => $user[5]
+            "email_when_comment" => $user[5],
+            "creation_date" => $user[6]
         ));
         print("User $user[0] created.\n");
     }

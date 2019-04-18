@@ -20,7 +20,7 @@
     <div id="error_msg_email" style="color:red;"></div>
     <button id="btn_email">Change email</button>
 </div>
-<div class="password cont">
+<div class="password_cont">
     <p>Password</p>
     <p>New password: </p>
     <input type="password" value="" id="input_pswd"><br>
@@ -28,6 +28,20 @@
     <input type="password" value="" id="input_pswd_password"><br>
     <div id="error_msg_pswd" style="color:red;"></div>
     <button id="btn_pswd">Change password</button>
+</div>
+<div class="email_pref_cont">
+    <p>Email preferences</p>
+    <p>You want a notification by email when someone comments one of your posts: </p>
+    <div>
+        <input type="radio" id="email_pref_yes" name="email_pref_radio" value="yes" <?= $_SESSION['email_when_comment'] === '1' ? 'checked' : "" ?>>
+        <label for="yes">Yes</label>
+    </div>
+    <div>
+        <input type="radio" id="email_pref_no" name="email_pref_radio" value="no" <?= $_SESSION['email_when_comment'] === '0' ? 'checked' : "" ?>>
+        <label for="no">No</label>
+    </div>
+    <div id="confirmation_msg_pref" style="color:green;"></div>
+    <button id="btn_email_pref">Change email preferences</button>
 </div>
 
 <script type="text/javascript">

@@ -34,6 +34,7 @@ try {
     pswd CHAR( 128 ) NOT NULL,
     verif_hash VARCHAR( 50 ) NOT NULL,
     confirmed TINYINT( 1 ) NOT NULL,
+    email_when_comment TINYINT( 1 ) NOT NULL,
     creation_date DATETIME NOT NULL )";
     $db->exec($sql);
     print("Created $table table.\n");

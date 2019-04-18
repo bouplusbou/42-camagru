@@ -10,8 +10,8 @@
     <div class="post_footer">
     <?php if (isset($_SESSION['username']) && isset($_SESSION['id_user'])) { ?>
         <button class="like_btn" id_post="<?= $post->id_post; ?>">Like</button>
-        <a href="<?= 'index.php?p=viewPost&id='.$post->id_post; ?>">Comment</a>
     <?php } ?>
+        <a href="<?= 'index.php?p=viewPost&id='.$post->id_post; ?>">View comments</a>
         <div class="likes">
             <p id_post_show_likes="<?= $post->id_post; ?>"><?= $post->likes_count ? $post->likes_count : 0; ?></p>
             <p> Likes</p>

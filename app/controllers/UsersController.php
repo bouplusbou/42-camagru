@@ -1,6 +1,13 @@
 <?php
 require __DIR__.'/../models/User.php';
 
+if (isset($_POST['action']) && $_POST['action'] === 'update_email_pref') {
+    session_start();
+    User::updateEmailPref($_POST['username'], $_POST['email_pref']);
+    $_SESSION['email_when_comment'] = $_POST['email_pref'];
+    echo "email preferences updated";
+}
+
 if (isset($_POST['newUsername']) && isset($_POST['pswd']) && isset($_POST['username'])) {
     session_start();
     $pswd = $_POST['pswd'];
@@ -43,11 +50,6 @@ if (isset($_POST['newEmail']) && isset($_POST['pswd']) && isset($_POST['username
     }
 }
 
-
-
-
-
-
 if (isset($_POST['newPassword']) && isset($_POST['currentPswd']) && isset($_POST['email']) && isset($_POST['username'])) {
     session_start();
     $current_pswd = $_POST['currentPswd'];
@@ -66,11 +68,6 @@ if (isset($_POST['newPassword']) && isset($_POST['currentPswd']) && isset($_POST
         echo "password KO";
     }
 }
-
-
-
-
-
 
 if (isset($_POST['newPswd']) && isset($_POST['email']) && isset($_POST['hash'])) {
     $new_pswd = $_POST['newPswd'];
@@ -135,8 +132,17 @@ function resetEmail($email, $hash) {
 function logout() {
     if (isset($_SESSION['username'])) {
         unset($_SESSION['username']);
-        header('Location: index.php');
     }
+    if (isset($_SESSION['id_user'])) {
+        unset($_SESSION['id_user']);
+    }
+    if (isset($_SESSION['email'])) {
+        unset($_SESSION['email']);
+    }
+    if (isset($_SESSION['email_when_comment'])) {
+        unset($_SESSION['email_when_comment']);
+    }
+    header('Location: index.php');
 }
 
 function login() {
@@ -152,6 +158,7 @@ function login_attempt($user_cred) {
             $_SESSION['username'] = $user['username'];
             $_SESSION['id_user'] = $user['id_user'];
             $_SESSION['email'] = $user['email'];
+            $_SESSION['email_when_comment'] = $user['email_when_comment'];
             header('Location: index.php');
         } else {
             return "Sorry but you have to confirm your email address first";
@@ -178,7 +185,7 @@ function create_user() {
     $verif_hash = md5(uniqid(rand(), true));
     // echo $verif_hash."\n";
     $creation_date = date("Y-m-d H:i:s");
-    $user_data = array($username, $email, $pswd, $verif_hash, '0', $creation_date);
+    $user_data = array($username, $email, $pswd, $verif_hash, '0', '1', $creation_date);
     $user = User::insertUser($user_data);
     $user_cred = array(
         "username" => $username, 

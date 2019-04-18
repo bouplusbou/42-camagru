@@ -3,9 +3,7 @@ const commentInput = document.getElementById('comment_input');
 const commentCont = document.getElementById('comments_container');
 
 commentBtn.addEventListener("click", function() {
-    let commentInfo = 'comment='+commentInput.value+'&id_user='+currentUserID+'&id_post='+commentBtn.getAttribute('id_post');
-
-    // console.log(commentInfo);
+    let commentInfo = 'action=create_comment&comment='+commentInput.value+'&id_user='+currentUserID+'&id_post='+commentBtn.getAttribute('id_post')+'&id_post_creator='+commentBtn.getAttribute('id_post_creator');
 
     var ajx = new XMLHttpRequest();
     ajx.onreadystatechange = function () {
@@ -13,7 +11,7 @@ commentBtn.addEventListener("click", function() {
             document.getElementById("message").innerHTML = ajx.responseText;
         }
     };
-    ajx.open("POST", "./app/controllers/CommentsController.php", true);
+    ajx.open("POST", "./app/controllers/PostsController.php", true);
     ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     ajx.send(commentInfo);
   

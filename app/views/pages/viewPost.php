@@ -23,7 +23,7 @@
         </div>
         <?php if (isset($_SESSION['username']) && isset($_SESSION['id_user'])) { ?>
 		<input placeholder="Type your comment here..." type="text" value="" name="comment" id="comment_input" />
-		<input type="submit" value="comment" name="submit" id="comment_btn" id_user="<?= $_SESSION['id_user']; ?>" id_post="<?= $post['id_post']; ?>" />
+		<input type="submit" value="comment" name="submit" id="comment_btn" id_user="<?= $_SESSION['id_user']; ?>" id_post="<?= $post['id_post']; ?>" id_post_creator="<?= $post['id_user']; ?>" />
         <?php } ?>
     </div>
 </div>

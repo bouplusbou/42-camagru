@@ -6,15 +6,16 @@ class User {
         require __DIR__.'/../../config/database.php';
         $PDO = new PDO($DB_DSN, $DB_USER, $DB_PASSWORD);
         $PDO->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-        $req = $PDO->prepare("  INSERT INTO users (username, email, pswd, verif_hash, confirmed, creation_date) 
-                                VALUES (:username, :email, :pswd, :verif_hash, :confirmed, :creation_date)");
+        $req = $PDO->prepare("  INSERT INTO users (username, email, pswd, verif_hash, confirmed, email_when_comment, creation_date) 
+                                VALUES (:username, :email, :pswd, :verif_hash, :confirmed, :email_when_comment, :creation_date)");
         $req->execute(array(
             "username" => $user[0], 
             "email" => $user[1],
             "pswd" => $user[2],
             "verif_hash" => $user[3],
             "confirmed" => $user[4],
-            "creation_date" => $user[5]
+            "email_when_comment" => $user[5],
+            "creation_date" => $user[6]
         ));
     }
 
@@ -28,7 +29,7 @@ class User {
         $req->execute( array('username' => $username) );
         $hashed_pswd = $req->fetch();
         if (password_verify($pswd, $hashed_pswd['pswd'])) {
-            $req = $PDO->prepare("SELECT id_user, username, confirmed, email FROM users WHERE username = :username");
+            $req = $PDO->prepare("SELECT id_user, username, confirmed, email, email_when_comment FROM users WHERE username = :username");
             $req->execute( array('username' => $username) );
             $data = $req->fetch();
             return $data;
@@ -148,6 +149,27 @@ class User {
         $req->execute( array( 
             'email' => $new_email,
             'username' => $username
+        ));
+    }
+
+    public static function sendEmailWhenComment($id_user) {
+        require __DIR__.'/../../config/database.php';
+        $PDO = new PDO($DB_DSN, $DB_USER, $DB_PASSWORD);
+        $PDO->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+        $req = $PDO->prepare("SELECT username, email, email_when_comment FROM users WHERE id_user = :id_user");
+        $req->execute( array( 'id_user' => $id_user ) );
+        $data = $req->fetch();
+        return $data;
+    }
+    
+    public static function updateEmailPref($username, $email_pref) {
+        require __DIR__.'/../../config/database.php';
+        $PDO = new PDO($DB_DSN, $DB_USER, $DB_PASSWORD);
+        $PDO->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+        $req = $PDO->prepare("UPDATE users SET email_when_comment = :email_when_comment WHERE username = :username");
+        $req->execute( array( 
+            'username' => $username,
+            'email_when_comment' => $email_pref
         ));
     }
 }
