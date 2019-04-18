@@ -23,8 +23,8 @@ if (isset($_GET['p'])) {
         newPost();
     if ($_GET['p'] === 'account')
         account();
-    if ($_GET['p'] === 'viewPost')
-        viewPost($_GET['id']);
+    if ($_GET['p'] === 'view_post')
+        view_post($_GET['id']);
     if ($_GET['p'] === 'confirmation')
         confirmation($_GET['email'], $_GET['hash']);
     if ($_GET['p'] === 'resetEmail')

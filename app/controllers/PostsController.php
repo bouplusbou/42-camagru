@@ -109,11 +109,11 @@ if (isset($_POST['action']) && $_POST['action'] === 'create_comment') {
         Someone just add a new comment on your post!
         You can check it out following this link right there :
 
-        http://127.0.0.1:8080/index.php?p=viewPost&id='.$_POST['id_post'].'
+        http://127.0.0.1:8080/index.php?p=view_post&id='.$_POST['id_post'].'
         
         ';
         // echo $creator['email'];
-        // echo 'http://127.0.0.1:8080/index.php?p=viewPost&id='.$_POST['id_post'];
+        // echo 'http://127.0.0.1:8080/index.php?p=view_post&id='.$_POST['id_post'];
         mail($creator['email'], $subject, $message);
     }
 }
@@ -125,7 +125,7 @@ function newPost() {
         $posts = Post::getAllPosts();
         require './app/views/pages/post_webcam.php';
     } else {
-        require './app/views/pages/pleaseLoggin.php';
+        require './app/views/pages/please_loggin.php';
     }
 }
 
@@ -142,12 +142,12 @@ function listPosts() {
     require './app/views/pages/galery.php';
 }
 
-function viewPost($id_post) {
+function view_post($id_post) {
     require './app/models/Post.php';
     require './app/models/Comment.php';
     $post = Post::getOnePost($id_post);
     $comments = Comment::getComments($id_post);
-    require './app/views/pages/viewPost.php';
+    require './app/views/pages/view_post.php';
 }
 
 function uploadImg() {
@@ -186,6 +186,6 @@ function newPostWithImg($filename) {
         $posts = Post::getAllPosts();
         require __DIR__.'/../views/pages/post_upload.php';
     } else {
-        require __DIR__.'/../views/pages/pleaseLoggin.php';
+        require __DIR__.'/../views/pages/please_loggin.php';
     }
 }

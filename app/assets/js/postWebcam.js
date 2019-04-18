@@ -162,6 +162,7 @@ function getThumbnails () {
     var ajx = new XMLHttpRequest();
     ajx.onreadystatechange = function () {
         if (ajx.readyState == 4 && ajx.status == 200) {
+            console.log(ajx.responseText);
             let thumbName = ajx.responseText;
             addLastThumbnail(thumbName);
         }
