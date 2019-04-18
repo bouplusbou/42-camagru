@@ -7,8 +7,8 @@
 </div>
 
 <!-- Trigger canvas web API -->
-<div class="controller">
-	<button id="snap">Capture</button>
+<div id="control">
+	<!-- <button id="snap">Capture</button> -->
 </div>
 
 <div id="sticker_container">
@@ -19,7 +19,6 @@
 <?php endforeach; ?>
 </div>
 
-
 <div id="thumbnails_container">
 <?php foreach ($posts as $post): 
 	if ($post->id_user === $_SESSION['id_user']) {?>
@@ -27,12 +26,7 @@
 <?php } endforeach; ?>
 </div>
 
-<!-- Webcam video snapshot -->
-<!-- <canvas id="canvas" width="640" height="480"></canvas> -->
-
 <div id="message" style="color:red;"></div>
-
-
 
 <?php if (isset($_SESSION['username']) && isset($_SESSION['id_user'])) { ?>
 <script type="text/javascript">

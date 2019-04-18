@@ -14,9 +14,20 @@ let selected_sticker_src;
                 selected_sticker.setAttribute('id', 'selected_sticker');
                 selected_sticker.setAttribute('class', 'dragme');
                 overlay.append(selected_sticker);
+                const snap = document.getElementById("snap");
+                if (!snap) {
+                    createSnapButton();
+                }
             }
         });
 
+        function createSnapButton() {
+            const control = document.getElementById('control');
+            let capture_button = document.createElement('button');
+            capture_button.setAttribute('id', 'snap');
+            capture_button.innerText = 'Capture';
+            control.appendChild(capture_button);
+        }
 
 ////////////////////////////////////////////////////////////////////////////////////// drag the sticker
         function startDrag(e) {
@@ -90,8 +101,8 @@ let selected_sticker_src;
     'use strict';
     
     const video = document.getElementById('video');
-    const snap = document.getElementById("snap");
-    const errorMsgElement = document.querySelector('span#errorMsg');
+    // const snap = document.getElementById("snap");
+    // const errorMsgElement = document.querySelector('span#errorMsg');
     
     const constraints = {
         audio: false,
@@ -107,7 +118,7 @@ let selected_sticker_src;
             const stream = await navigator.mediaDevices.getUserMedia(constraints);
             handleSuccess(stream);
         } catch (e) {
-            errorMsgElement.innerHTML = `navigator.getUserMedia error:${e.toString()}`;
+            // errorMsgElement.innerHTML = `navigator.getUserMedia error:${e.toString()}`;
         }
     }
     
@@ -127,26 +138,29 @@ let selected_sticker_src;
     
 /////////////////////////////////////////////////////////////////////////////////////////// send to server
 
-    // Draw image
-    snap.addEventListener("click", function() {
+document.addEventListener( "click", click );
 
+function click(event){
+    let element = event.target;
+    if(element.id == 'snap'){
+        // console.log("hi");
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d');
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         context.drawImage(video, 0, 0, 640, 480);
-
+        
         // Save and send to the server
         var dst_img = canvas.toDataURL();
         // console.log(dst_img);
         // let newImg = document.createElement("img");
-
+        
         // get the coord to position the src + the path
         // console.log(selected_sticker.style.left);
         var placement_x = parseInt(selected_sticker.style.left.length != 0 ? selected_sticker.style.left : 0, 10);
         var placement_y = parseInt(selected_sticker.style.top.length != 0 ? selected_sticker.style.top : 0, 10);
         var src_img = selected_sticker_src;
-
+        
         // send to the server using AJAX
         var img_details = "placement_x="+placement_x+"&placement_y="+placement_y+"&dst_img="+dst_img+"&src_img="+src_img;
         // console.log(img_details);
@@ -161,10 +175,15 @@ let selected_sticker_src;
         ajx.open("POST", "./app/controllers/WebcamController.php", true);
         ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         ajx.send(img_details);
+    }
+}
 
-        
 
-    });
+
+    // Draw image
+
+
+
 
 //////////////////////////////////////////// load thumbnails
 
