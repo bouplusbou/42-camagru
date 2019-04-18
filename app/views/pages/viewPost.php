@@ -6,9 +6,11 @@
     </div>
     <img src="<?= './app/assets/images/post_img/'.$post['photo_name']; ?>" alt="">
     <div class="post_footer">
-        <a href="">Like</a>
-        <a href="<?= 'index.php?p=viewPost&id='.$post['id_post']; ?>">Comment</a>
-        <p>1540 Likes</p>
+        <button id="like_btn" id_post="<?= $post['id_post']; ?>">Like</button>
+        <div class="likes">
+            <p id_post_show_likes="<?= $post['id_post']; ?>"><?= $post['likes_count'] ? $post['likes_count'] : 0; ?></p>
+            <p> Likes</p>
+        </div>
         <div id="comments_container">
         <?php foreach ($comments as $comment): ?>
             <div class="comment">

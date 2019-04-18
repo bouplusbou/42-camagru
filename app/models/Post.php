@@ -35,7 +35,15 @@ class Post {
         require './config/database.php';
         $PDO = new PDO($DB_DSN, $DB_USER, $DB_PASSWORD);
         $PDO->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-        $req = $PDO->query('SELECT * FROM posts JOIN users ON posts.id_user = users.id_user WHERE posts.id_post = '.$id_post);
+        $req = $PDO->query('SELECT posts.id_post, posts.photo_name, posts.id_user, likes_count, users.username
+                            FROM posts
+                            LEFT JOIN (
+                                SELECT id_post, COUNT(*) AS likes_count
+                                FROM likes
+                                GROUP BY id_post
+                            ) likes_count ON likes_count.id_post = posts.id_post
+                            JOIN users ON posts.id_user = users.id_user
+                            WHERE posts.id_post = '.$id_post);
         $data = $req->fetch();
         return $data;
     }

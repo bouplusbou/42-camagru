@@ -176,6 +176,7 @@ function create_user() {
     $email = $_POST['email'];
     $pswd = password_hash($_POST['pswd'], PASSWORD_BCRYPT);
     $verif_hash = md5(uniqid(rand(), true));
+    // echo $verif_hash."\n";
     $creation_date = date("Y-m-d H:i:s");
     $user_data = array($username, $email, $pswd, $verif_hash, '0', $creation_date);
     $user = User::insertUser($user_data);
@@ -197,6 +198,7 @@ function create_user() {
     http://127.0.0.1:8080/index.php?p=confirmation&email='.$user_data[1].'&hash='.$user_data[3].'
 
     ';
+    // echo $user_data[3];
     mail($user_data[1], $subject, $message);
     header('Location: index.php?p=login');
 }
