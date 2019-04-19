@@ -45,7 +45,7 @@
 </div>
 
 <script type="text/javascript">
-<?php if (isset($_SESSION['username'])) { ?>
+<?php if (isset($_SESSION['username']) && isset($_SESSION['email'])) { ?>
     let username = "<?= $_SESSION['username']; ?>";
     let email = "<?= $_SESSION['email']; ?>";
 <?php } ?>

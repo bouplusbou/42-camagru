@@ -3,12 +3,12 @@ const commentInput = document.getElementById('comment_input');
 const commentCont = document.getElementById('comments_container');
 
 commentBtn.addEventListener("click", function() {
-    const action = 'action=create_comment&comment='+commentInput.value+'&id_user='+currentUserID+'&id_post='+commentBtn.getAttribute('id_post')+'&id_post_creator='+commentBtn.getAttribute('id_post_creator');
+    const action = 'action=create_comment&comment='+commentInput.value+'&id_post='+commentBtn.getAttribute('id_post')+'&id_post_creator='+commentBtn.getAttribute('id_post_creator');
 
     const ajx = new XMLHttpRequest();
     ajx.onreadystatechange = function () {
         if (ajx.readyState == 4 && ajx.status == 200) {
-            document.getElementById("message").innerHTML = ajx.responseText;
+            // document.getElementById("message").innerHTML = ajx.responseText;
         }
     };
     ajx.open("POST", "./app/controllers/PostsController.php", true);
@@ -30,7 +30,7 @@ const likeBtn = document.getElementById('like_btn');
 
 likeBtn.addEventListener("click", function(event) {
     const idPost = event.target.getAttribute('id_post');
-    const action = 'action=create_like&id_user='+currentUserID+'&id_post='+idPost;
+    const action = 'action=create_like&id_post='+idPost;
 
     const ajx = new XMLHttpRequest();
     ajx.onreadystatechange = function () {

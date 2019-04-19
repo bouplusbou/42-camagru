@@ -47,6 +47,14 @@ class Post {
         $data = $req->fetchAll(PDO::FETCH_ASSOC);
         return $data;
     }
+    
+    public static function getIdUserFromIdPost($id_post) {
+        $req = Database::getPDO()->prepare('    SELECT id_user FROM posts
+                                                WHERE id_post = :id_post');
+        $req->execute(array( "id_post" => $id_post ));
+        $data = $req->fetch();
+        return $data;
+    }
 
     public static function getUserPosts($username) {
         $req = Database::getPDO()->prepare('  SELECT posts.id_post, posts.photo_name, posts.id_user, likes_count, users.username

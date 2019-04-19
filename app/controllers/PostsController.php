@@ -169,13 +169,19 @@ if (isset($_POST['action']) && $_POST['action'] === 'upload_img_montage') {
     }
 }
 
+
+
+
+
+
 if (isset($_POST['action']) && $_POST['action'] === 'create_like') {
-    if (isset($_POST['id_post']) && isset($_POST['id_user'])) {
-        if (Like::alreadyLiked($_POST['id_post'], $_POST['id_user'])) {
-            Like::deleteLike($_POST['id_post'], $_POST['id_user']);
+    session_start();
+    if (isset($_POST['id_post'])) {
+        if (Like::alreadyLiked($_POST['id_post'], $_SESSION['id_user'])) {
+            Like::deleteLike($_POST['id_post'], $_SESSION['id_user']);
             echo "deleted";
         } else {
-            Like::createLike($_POST['id_post'], $_POST['id_user']);
+            Like::createLike($_POST['id_post'], $_SESSION['id_user']);
             echo "created";
         }
     }
@@ -183,9 +189,9 @@ if (isset($_POST['action']) && $_POST['action'] === 'create_like') {
 
 if (isset($_POST['action']) && $_POST['action'] === 'delete_post') {
     session_start();
-    if (isset($_POST['id_post']) && isset($_POST['id_user'])) {
-        if ($_SESSION['id_user'] === $_POST['id_user']) {
-            Post::deletePost($_POST['id_post'], $_POST['id_user']);
+    if (isset($_POST['id_post']) && isset($_SESSION['id_user'])) {
+        if (Post::getIdUserFromIdPost($_POST['id_post'])['id_user'] === $_SESSION['id_user']) {
+            Post::deletePost($_POST['id_post'], $_SESSION['id_user']);
             echo "post deleted";
         } else {
             echo "user has no right to delete";
@@ -194,9 +200,9 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_post') {
 }
 
 if (isset($_POST['action']) && $_POST['action'] === 'create_comment') {
+    session_start();
     $creation_date = date("Y-m-d H:i:s");
-    $comment_data = array($_POST['comment'], $creation_date, $_POST['id_user'], $_POST['id_post']);
-    // var_dump($comment_data);
+    $comment_data = array(htmlspecialchars($_POST['comment'], ENT_QUOTES, 'UTF-8'), $creation_date, $_SESSION['id_user'], $_POST['id_post']);
     $comment = Comment::insertComment($comment_data);
     $creator = User::sendEmailWhenComment($_POST['id_post_creator']);
     if ($creator["email_when_comment"] === '1') {

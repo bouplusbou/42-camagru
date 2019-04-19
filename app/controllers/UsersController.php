@@ -16,7 +16,7 @@ function view_signup() {
 
 
 function view_login() {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['submit'] === "login") {
+    if (isset($_POST['submit']) && $_POST['submit'] === "login") {
         if ($user = User::userCredsOK($_POST)) {
             if ($user['confirmed'] === '1') {
                 $_SESSION['username'] = $user['username'];
@@ -74,7 +74,7 @@ function view_account_confirmation($email, $hash) {
 }
 
 
-function view_reset_email($email, $hash) {
+function view_reset_password_email($email, $hash) {
     if (User::emailHashMatch($email, $hash)) {
         $confirmation_msg = "The link is OK";
     } else {
@@ -90,9 +90,9 @@ function view_reset_email($email, $hash) {
 /////////// Check errors ///////////
 
 
-function submit_errors() {
-    $email = $_POST['email'];
-    $username = $_POST['username'];
+function create_user_errors() {
+    $email = htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8');
+    $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
     $password = $_POST['pswd'];
     $errors = array();
     if (!preg_match("/^[A-Za-z0-9]{3,10}$/", $username)) {
@@ -120,8 +120,8 @@ function submit_errors() {
 
 
 function reset_errors() {
-    $email = $_POST['email'];
-    $username = $_POST['username'];
+    $email = htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8');
+    $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
     $password = $_POST['pswd'];
     $errors = array();
     if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/", $password)) {
@@ -137,11 +137,11 @@ function reset_errors() {
 
 
 function create_user() {
-    if (submit_errors()) {
+    if (create_user_errors()) {
         exit;
     }
-    $username = $_POST['username'];
-    $email = $_POST['email'];
+    $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
+    $email = htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8');
     $pswd = password_hash($_POST['pswd'], PASSWORD_BCRYPT);
     $verif_hash = md5(uniqid(rand(), true));
     $creation_date = date("Y-m-d H:i:s");
@@ -269,7 +269,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'reset_password_email' && is
 
 
 // send reset password
-if (isset($_POST['action']) && $_POST['action'] === 'reset_email' && isset($_POST['email'])) {
+if (isset($_POST['action']) && $_POST['action'] === 'reset_password_email' && isset($_POST['email'])) {
     $email = $_POST['email'];
     if ($verif_hash = User::emailExists($email)) {
         $subject = 'Reset your password';
@@ -279,12 +279,12 @@ if (isset($_POST['action']) && $_POST['action'] === 'reset_email' && isset($_POS
         We\'ve just received  a request to reset your password. If you didn\'t make the request, just ignore this email.
         Otherwise you can reset your password using this link:
 
-        http://127.0.0.1:8080/index.php?p=reset_email&email='.$email.'&hash='.$verif_hash['verif_hash'].'
+        http://127.0.0.1:8080/index.php?p=reset_password_email&email='.$email.'&hash='.$verif_hash['verif_hash'].'
     
         Thanks,
         The Camagru Team
         ';
-        echo 'http://127.0.0.1:8080/index.php?p=reset_email&email='.$email.'&hash='.$verif_hash['verif_hash'];
+        echo 'http://127.0.0.1:8080/index.php?p=reset_password_email&email='.$email.'&hash='.$verif_hash['verif_hash'];
         mail($email, $subject, $message);
     }
 }

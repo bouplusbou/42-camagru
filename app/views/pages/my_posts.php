@@ -1,7 +1,6 @@
 <h1>MY POSTS</h1>
 
 <?php foreach ($user_posts as $user_post): ?>
-<!-- <?php var_dump($user_post) ?> -->
 <div div_post="<?= $user_post->id_post; ?>" class="post_container">
     <div class="post_header">
         <p><?= $user_post->username; ?></p>
@@ -21,13 +20,6 @@
 </div>
 <?php endforeach; ?>
 
-<?php if (isset($_SESSION['username']) && isset($_SESSION['id_user'])) { ?>
-<script type="text/javascript">
-    let currentUsername = "<?= $_SESSION['username']; ?>";
-    let currentUserID = "<?= $_SESSION['id_user']; ?>";
-</script>
 <script type="text/javascript" src="./app/assets/js/myPosts.js"></script>
-<?php } ?>
-
 
 <div id="message" style="color:red;"></div>

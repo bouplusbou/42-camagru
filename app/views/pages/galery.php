@@ -1,7 +1,6 @@
 <h1>GALERY</h1>
 
 <?php foreach ($posts as $post): ?>
-<!-- <?php var_dump($post) ?> -->
 <div class="post_container">
     <div class="post_header">
         <p><?= $post->username; ?></p>
@@ -21,10 +20,6 @@
 <?php endforeach; ?>
 
 <?php if (isset($_SESSION['username']) && isset($_SESSION['id_user'])) { ?>
-<script type="text/javascript">
-    let currentUsername = "<?= $_SESSION['username']; ?>";
-    let currentUserID = "<?= $_SESSION['id_user']; ?>";
-</script>
 <script type="text/javascript" src="./app/assets/js/galery.js"></script>
 <?php } ?>
 

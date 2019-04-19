@@ -16,14 +16,3 @@
         <a href="index.php?p=login">Login</a>
     </div>
 </div>
-
-
-<!-- // check if username not null
-// check if username doesn't exist
-
-// check if email not null
-// check if email is an email address
-// check if email doesn't exist 
-
-// check if password not null
-// check if password is at least 6 char long and contain one maj and one number -->

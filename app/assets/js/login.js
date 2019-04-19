@@ -6,7 +6,7 @@ resetBtn.addEventListener("click", function() {
     if (email) {
         const regex = /\S+@\S+\.\S+/ ;
         if (regex.test(String(email).toLowerCase())) {
-            const action = 'action=reset_email&email='+email;
+            const action = 'action=reset_password_email&email='+email;
 
             const ajx = new XMLHttpRequest();
             ajx.onreadystatechange = function () {

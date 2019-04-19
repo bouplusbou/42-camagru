@@ -2,7 +2,7 @@ const likeBtnArray = document.getElementsByClassName('like_btn');
 for (let i = 0; i < likeBtnArray.length; i++) {
     likeBtnArray[i].addEventListener("click", function(event) {
         const idPost = event.target.getAttribute('id_post');
-        const action = 'action=create_like&id_user='+currentUserID+'&id_post='+idPost;
+        const action = 'action=create_like&id_post='+idPost;
     
         const ajx = new XMLHttpRequest();
         ajx.onreadystatechange = function () {
@@ -25,7 +25,7 @@ for (let i = 0; i < deleteBtnArray.length; i++) {
     deleteBtnArray[i].addEventListener("click", function(event) {
         if (window.confirm('Are you sure you want to delete this post ?')) {
             const idPost = event.target.getAttribute('id_post');
-            const action = 'action=delete_post&id_user='+currentUserID+'&id_post='+idPost;
+            const action = 'action=delete_post&id_post='+idPost;
         
             const ajx = new XMLHttpRequest();
             ajx.onreadystatechange = function () {

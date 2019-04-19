@@ -2,7 +2,7 @@ const likeBtnArray = document.getElementsByClassName('like_btn');
 for (var i = 0; i < likeBtnArray.length; i++) {
     likeBtnArray[i].addEventListener("click", function(event) {
         const idPost = event.target.getAttribute('id_post');
-        const action = 'action=create_like&id_user='+currentUserID+'&id_post='+idPost;
+        const action = 'action=create_like&id_post='+idPost;
     
         const ajx = new XMLHttpRequest();
         ajx.onreadystatechange = function () {

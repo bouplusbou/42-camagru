@@ -1,6 +1,6 @@
 <?php
 $title = 'home';
-$valid_titles = array('signup', 'galery', 'login', 'logout', 'post_webcam', 'post_upload', 'account', 'my_posts', 'view_post', 'confirmation', 'reset_email');
+$valid_titles = array('signup', 'galery', 'login', 'logout', 'post_webcam', 'post_upload', 'account', 'my_posts', 'view_post', 'confirmation', 'reset_password_email');
 if (isset($_GET['p']) && in_array($_GET['p'], $valid_titles)) {
     $titles = array(
         'signup' => 'Signup',
@@ -13,7 +13,7 @@ if (isset($_GET['p']) && in_array($_GET['p'], $valid_titles)) {
         'my_posts' => 'My posts',
         'view_post' => 'Post',
         'confirmation' => 'Account confirmation',
-        'reset_email' => 'Reset my email'
+        'reset_password_email' => 'Reset my email'
     );
     $title = $titles[$_GET['p']];
     $css = './app/assets/css/'.$_GET['p'].'.css';
@@ -21,7 +21,9 @@ if (isset($_GET['p']) && in_array($_GET['p'], $valid_titles)) {
     $title = 'Galery';
     $css = './app/assets/css/galery.css';
 }
+
 require_once __DIR__.'/app/views/layouts/header.php';
+
 require_once __DIR__.'/app/controllers/PostsController.php';
 require_once __DIR__.'/app/controllers/UsersController.php';
 
@@ -46,8 +48,8 @@ if (isset($_GET['p'])) {
         view_one_post($_GET['id']);
     else if ($_GET['p'] === 'confirmation')
         view_account_confirmation($_GET['email'], $_GET['hash']);
-    else if ($_GET['p'] === 'reset_email')
-        view_reset_email($_GET['email'], $_GET['hash']);
+    else if ($_GET['p'] === 'reset_password_email')
+        view_reset_password_email($_GET['email'], $_GET['hash']);
     else 
         view_galery();
 } else {

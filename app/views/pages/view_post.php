@@ -30,10 +30,9 @@
 
 <div id="message" style="color:red;"></div>
 
-<?php if (isset($_SESSION['username']) && isset($_SESSION['id_user'])) { ?>
+<?php if (isset($_SESSION['username'])) { ?>
 <script type="text/javascript">
     let currentUsername = "<?= $_SESSION['username']; ?>";
-    let currentUserID = "<?= $_SESSION['id_user']; ?>";
-    </script>
+</script>
 <script type="text/javascript" src="./app/assets/js/viewPost.js"></script>
 <?php } ?>
