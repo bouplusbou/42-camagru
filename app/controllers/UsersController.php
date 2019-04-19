@@ -63,7 +63,7 @@ function view_account() {
 }
 
 
-function view_confirmation($email, $hash) {
+function view_account_confirmation($email, $hash) {
     if (User::userConfirmed($email, $hash)) {
         $_SESSION['user_confirmed'] = '1';
         $confirmation_msg = "Congratulations ! You've just confirmed your account. Enter your credentials to connect";
@@ -279,12 +279,12 @@ if (isset($_POST['action']) && $_POST['action'] === 'reset_email' && isset($_POS
         We\'ve just received  a request to reset your password. If you didn\'t make the request, just ignore this email.
         Otherwise you can reset your password using this link:
 
-        http://127.0.0.1:8080/index.php?p=resetEmail&email='.$email.'&hash='.$verif_hash['verif_hash'].'
+        http://127.0.0.1:8080/index.php?p=reset_email&email='.$email.'&hash='.$verif_hash['verif_hash'].'
     
         Thanks,
         The Camagru Team
         ';
-        echo 'http://127.0.0.1:8080/index.php?p=resetEmail&email='.$email.'&hash='.$verif_hash['verif_hash'];
+        echo 'http://127.0.0.1:8080/index.php?p=reset_email&email='.$email.'&hash='.$verif_hash['verif_hash'];
         mail($email, $subject, $message);
     }
 }

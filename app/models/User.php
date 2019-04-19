@@ -54,9 +54,6 @@ class User {
 
     public static function userConfirmed($email, $hash) {
         if (User::emailHashMatch($email, $hash)) {
-            // require_once __DIR__.'/../../config/database.php';
-            $PDO = new PDO($DB_DSN, $DB_USER, $DB_PASSWORD);
-            Database::getPDO()->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
             $req = Database::getPDO()->prepare("  UPDATE users SET confirmed = :confirmed 
                                     WHERE email = :email");
             $req->execute( array( 
