@@ -15,6 +15,16 @@ class Post {
         ));
     }
 
+    public static function deletePost($id_post, $id_user) {
+        require '../../config/database.php';
+        $PDO = new PDO($DB_DSN, $DB_USER, $DB_PASSWORD);
+        $PDO->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+        $req = $PDO->prepare("DELETE FROM posts WHERE id_post = :id_post");
+        $req->execute(array(
+            "id_post" => $id_post, 
+        ));
+    }
+
     public static function getAllPosts() {
         require './config/database.php';
         $PDO = new PDO($DB_DSN, $DB_USER, $DB_PASSWORD);
@@ -27,6 +37,23 @@ class Post {
                                 GROUP BY id_post
                             ) likes_count ON likes_count.id_post = posts.id_post
                             JOIN users ON posts.id_user = users.id_user');
+        $data = $req->fetchAll(PDO::FETCH_CLASS, 'Post');
+        return $data;
+    }
+
+    public static function getUserPosts($username) {
+        require './config/database.php';
+        $PDO = new PDO($DB_DSN, $DB_USER, $DB_PASSWORD);
+        $PDO->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+        $req = $PDO->query('SELECT posts.id_post, posts.photo_name, posts.id_user, likes_count, users.username
+                            FROM posts
+                            LEFT JOIN (
+                                SELECT id_post, COUNT(*) AS likes_count
+                                FROM likes
+                                GROUP BY id_post
+                            ) likes_count ON likes_count.id_post = posts.id_post
+                            JOIN users ON posts.id_user = users.id_user
+                            WHERE users.username = \''.$username.'\'');
         $data = $req->fetchAll(PDO::FETCH_CLASS, 'Post');
         return $data;
     }

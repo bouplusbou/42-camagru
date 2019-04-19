@@ -18,8 +18,9 @@
         <?php } ?>
         <a href="index.php?p=post_webcam">Post</a>
         <?php if (isset($_SESSION['username'])) { ?>
-            <a href="index.php?p=logout">Logout</a>
+            <a href="index.php?p=my_posts">My posts</a>
             <a href="index.php?p=account">Account</a>
+            <a href="index.php?p=logout">Logout</a>
         <?php } else { ?>
             <a href="index.php?p=login">Login</a>
             <a href="index.php?p=signup">Signup</a>

@@ -23,6 +23,8 @@ if (isset($_GET['p'])) {
         newPost();
     if ($_GET['p'] === 'account')
         account();
+    if ($_GET['p'] === 'my_posts')
+        my_posts();
     if ($_GET['p'] === 'view_post')
         view_post($_GET['id']);
     if ($_GET['p'] === 'confirmation')

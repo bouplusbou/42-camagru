@@ -77,8 +77,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'upload_img_montage') {
     }
 }
 
-
-
 if (isset($_POST['action']) && $_POST['action'] === 'create_like') {
     require __DIR__.'/../models/Like.php';
     if (isset($_POST['id_post']) && isset($_POST['id_user'])) {
@@ -88,6 +86,19 @@ if (isset($_POST['action']) && $_POST['action'] === 'create_like') {
         } else {
             Like::createLike($_POST['id_post'], $_POST['id_user']);
             echo "created";
+        }
+    }
+}
+
+if (isset($_POST['action']) && $_POST['action'] === 'delete_post') {
+    session_start();
+    require __DIR__.'/../models/Post.php';
+    if (isset($_POST['id_post']) && isset($_POST['id_user'])) {
+        if ($_SESSION['id_user'] === $_POST['id_user']) {
+            Post::deletePost($_POST['id_post'], $_POST['id_user']);
+            echo "post deleted";
+        } else {
+            echo "user has no right to delete";
         }
     }
 }
@@ -185,6 +196,16 @@ function newPostWithImg($filename) {
         require __DIR__.'/../models/Post.php';
         $posts = Post::getAllPosts();
         require __DIR__.'/../views/pages/post_upload.php';
+    } else {
+        require __DIR__.'/../views/pages/please_loggin.php';
+    }
+}
+
+function my_posts() {
+    if (isset($_SESSION['username'])) {
+        require __DIR__.'/../models/Post.php';
+        $user_posts = Post::getUserPosts($_SESSION['username']);
+        require __DIR__.'/../views/pages/my_posts.php';
     } else {
         require __DIR__.'/../views/pages/please_loggin.php';
     }
