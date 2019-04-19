@@ -1,10 +1,10 @@
 const likeBtnArray = document.getElementsByClassName('like_btn');
-for (var i = 0; i < likeBtnArray.length; i++) {
+for (let i = 0; i < likeBtnArray.length; i++) {
     likeBtnArray[i].addEventListener("click", function(event) {
-        let idPost = event.target.getAttribute('id_post');
-        let likeInfo = 'action=create_like&id_user='+currentUserID+'&id_post='+idPost;
+        const idPost = event.target.getAttribute('id_post');
+        const action = 'action=create_like&id_user='+currentUserID+'&id_post='+idPost;
     
-        var ajx = new XMLHttpRequest();
+        const ajx = new XMLHttpRequest();
         ajx.onreadystatechange = function () {
             if (ajx.readyState == 4 && ajx.status == 200) {
                 // document.getElementById("message").innerHTML = ajx.responseText;
@@ -15,20 +15,19 @@ for (var i = 0; i < likeBtnArray.length; i++) {
         };
         ajx.open("POST", "./app/controllers/PostsController.php", true);
         ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        ajx.send(likeInfo);
+        ajx.send(action);
     });
 };
 
 
 const deleteBtnArray = document.getElementsByClassName('delete_btn');
-for (var i = 0; i < deleteBtnArray.length; i++) {
+for (let i = 0; i < deleteBtnArray.length; i++) {
     deleteBtnArray[i].addEventListener("click", function(event) {
         if (window.confirm('Are you sure you want to delete this post ?')) {
-            console.log('delete it');
-            let idPost = event.target.getAttribute('id_post');
-            let deleteInfo = 'action=delete_post&id_user='+currentUserID+'&id_post='+idPost;
+            const idPost = event.target.getAttribute('id_post');
+            const action = 'action=delete_post&id_user='+currentUserID+'&id_post='+idPost;
         
-            var ajx = new XMLHttpRequest();
+            const ajx = new XMLHttpRequest();
             ajx.onreadystatechange = function () {
                 if (ajx.readyState == 4 && ajx.status == 200) {
                     document.getElementById("message").innerHTML = ajx.responseText;
@@ -38,7 +37,7 @@ for (var i = 0; i < deleteBtnArray.length; i++) {
             };
             ajx.open("POST", "./app/controllers/PostsController.php", true);
             ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            ajx.send(deleteInfo);
+            ajx.send(action);
         }
     });
 };

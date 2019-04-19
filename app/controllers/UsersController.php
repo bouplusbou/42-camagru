@@ -247,8 +247,8 @@ if (isset($_POST['newPassword']) && isset($_POST['currentPswd']) && isset($_POST
 
 
 // Update password via reset password email
-if (isset($_POST['newPswd']) && isset($_POST['email']) && isset($_POST['hash'])) {
-    $new_pswd = $_POST['newPswd'];
+if (isset($_POST['action']) && $_POST['action'] === 'reset_password_email' && isset($_POST['new_pswd']) && isset($_POST['email']) && isset($_POST['hash'])) {
+    $new_pswd = $_POST['new_pswd'];
     $hashed_pswd = password_hash($new_pswd, PASSWORD_BCRYPT);
     $email = $_POST['email'];
     $hash = $_POST['hash'];
@@ -269,8 +269,8 @@ if (isset($_POST['newPswd']) && isset($_POST['email']) && isset($_POST['hash']))
 
 
 // send reset password
-if (isset($_POST['resetEmail'])) {
-    $email = $_POST['resetEmail'];
+if (isset($_POST['action']) && $_POST['action'] === 'reset_email' && isset($_POST['email'])) {
+    $email = $_POST['email'];
     if ($verif_hash = User::emailExists($email)) {
         $subject = 'Reset your password';
         $message = '

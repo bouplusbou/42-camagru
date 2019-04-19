@@ -125,7 +125,6 @@ document.addEventListener( "click", click );
 function click(event){
     let element = event.target;
     if(element.id == 'snap'){
-        // console.log("hi");
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d');
         canvas.width = video.videoWidth;
@@ -133,42 +132,43 @@ function click(event){
         context.drawImage(video, 0, 0, 640, 480);
         
         // Save and send to the server
-        var img_data = canvas.toDataURL();
+        const img_data = canvas.toDataURL();
         
         // get the coord to position the src + the path
-        var placement_x = parseInt(selected_sticker.style.left.length != 0 ? selected_sticker.style.left : 0, 10);
-        var placement_y = parseInt(selected_sticker.style.top.length != 0 ? selected_sticker.style.top : 0, 10);
-        var sticker_src = selected_sticker_src;
+        const placement_x = parseInt(selected_sticker.style.left.length != 0 ? selected_sticker.style.left : 0, 10);
+        const placement_y = parseInt(selected_sticker.style.top.length != 0 ? selected_sticker.style.top : 0, 10);
+        const sticker_src = selected_sticker_src;
         
         // send to the server using AJAX
-        var img_details = "action=webcam_img_montage&placement_x="+placement_x+"&placement_y="+placement_y+"&img_data="+img_data+"&sticker_src="+sticker_src;
-        var ajx = new XMLHttpRequest();
+        const action = "action=webcam_img_montage&placement_x="+placement_x+"&placement_y="+placement_y+"&img_data="+img_data+"&sticker_src="+sticker_src;
+        const ajx = new XMLHttpRequest();
         ajx.onreadystatechange = function () {
             if (ajx.readyState == 4 && ajx.status == 200) {
                 document.getElementById("message").innerHTML = ajx.responseText;
                 getThumbnails();
-                
             }
         };
         ajx.open("POST", "./app/controllers/PostsController.php", true);
         ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        ajx.send(img_details);
+        ajx.send(action);
     }
 }
 
 
 //////////////////////////////////////////////////////////////////// load thumbnails
 function getThumbnails () {
-    var ajx = new XMLHttpRequest();
+    const action = "action=get_thumbnails";
+
+    const ajx = new XMLHttpRequest();
     ajx.onreadystatechange = function () {
         if (ajx.readyState == 4 && ajx.status == 200) {
-            console.log(ajx.responseText);
             let thumbName = ajx.responseText;
             addLastThumbnail(thumbName);
         }
     }
-    ajx.open('GET', './app/controllers/thumbnails.php', true);
-    ajx.send();
+    ajx.open('POST', './app/controllers/PostsController.php', true);
+    ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    ajx.send(action);
 }
 
 function addLastThumbnail (thumbName) {

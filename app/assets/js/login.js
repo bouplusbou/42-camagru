@@ -6,9 +6,9 @@ resetBtn.addEventListener("click", function() {
     if (email) {
         const regex = /\S+@\S+\.\S+/ ;
         if (regex.test(String(email).toLowerCase())) {
-            let resetInfo = 'resetEmail='+email;
+            const action = 'action=reset_email&email='+email;
 
-            var ajx = new XMLHttpRequest();
+            const ajx = new XMLHttpRequest();
             ajx.onreadystatechange = function () {
                 if (ajx.readyState == 4 && ajx.status == 200) {
                     document.getElementById("message").innerHTML = ajx.responseText;
@@ -16,7 +16,7 @@ resetBtn.addEventListener("click", function() {
             };
             ajx.open("POST", "./app/controllers/UsersController.php", true);
             ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            ajx.send(resetInfo);
+            ajx.send(action);
             window.alert("If the address " + email + " is related to a Camagru account, an email has been sent to reset your password");
         } else {
             window.alert("Please enter a proper email if you want to reset your password");

@@ -31,7 +31,7 @@ endif; ?>
     let hash = "<?= $_GET['hash']; ?>";
 <?php } ?>
 </script>
-<script type="text/javascript" src="./app/assets/js/reset.js"></script>
+<script type="text/javascript" src="./app/assets/js/resetPasswordEmail.js"></script>
 
 
 

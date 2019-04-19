@@ -12,9 +12,9 @@ const inputPswdPassword = document.getElementById('input_pswd_password');
 const radioPrefYes = document.getElementById('email_pref_yes');
 
 btnUsername.addEventListener("click", function() {
-    let usernameInfo = 'newUsername='+inputUsername.value+'&pswd='+inputUsernamePassword.value+'&username='+username;
+    const action = 'newUsername='+inputUsername.value+'&pswd='+inputUsernamePassword.value+'&username='+username;
 
-    var ajx = new XMLHttpRequest();
+    const ajx = new XMLHttpRequest();
     ajx.onreadystatechange = function () {
         if (ajx.readyState == 4 && ajx.status == 200) {
             document.getElementById("error_msg_username").innerHTML = ajx.responseText;
@@ -22,13 +22,13 @@ btnUsername.addEventListener("click", function() {
     };
     ajx.open("POST", "./app/controllers/UsersController.php", true);
     ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    ajx.send(usernameInfo);
+    ajx.send(action);
 });
 
 btnEmail.addEventListener("click", function() {
-    let emailInfo = 'newEmail='+inputEmail.value+'&pswd='+inputEmailPassword.value+'&username='+username;
+    const action = 'newEmail='+inputEmail.value+'&pswd='+inputEmailPassword.value+'&username='+username;
 
-    var ajx = new XMLHttpRequest();
+    const ajx = new XMLHttpRequest();
     ajx.onreadystatechange = function () {
         if (ajx.readyState == 4 && ajx.status == 200) {
             document.getElementById("error_msg_email").innerHTML = ajx.responseText;
@@ -36,13 +36,13 @@ btnEmail.addEventListener("click", function() {
     };
     ajx.open("POST", "./app/controllers/UsersController.php", true);
     ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    ajx.send(emailInfo);
+    ajx.send(action);
 });
 
 btnPswd.addEventListener("click", function() {
-    let pswdInfo = 'newPassword='+inputPswd.value+'&currentPswd='+inputPswdPassword.value+'&email='+email+'&username='+username;
+    const action = 'newPassword='+inputPswd.value+'&currentPswd='+inputPswdPassword.value+'&email='+email+'&username='+username;
 
-    var ajx = new XMLHttpRequest();
+    const ajx = new XMLHttpRequest();
     ajx.onreadystatechange = function () {
         if (ajx.readyState == 4 && ajx.status == 200) {
             document.getElementById("error_msg_pswd").innerHTML = ajx.responseText;
@@ -50,7 +50,7 @@ btnPswd.addEventListener("click", function() {
     };
     ajx.open("POST", "./app/controllers/UsersController.php", true);
     ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    ajx.send(pswdInfo);
+    ajx.send(action);
 });
 
 btnEmailPref.addEventListener("click", function() {
@@ -58,9 +58,9 @@ btnEmailPref.addEventListener("click", function() {
     if (radioPrefYes.checked) {
         emailPref = '1';
     }
-    let emailPrefInfo = 'action=update_email_pref&email_pref='+emailPref+'&username='+username;
+    const action = 'action=update_email_pref&email_pref='+emailPref+'&username='+username;
 
-    var ajx = new XMLHttpRequest();
+    const ajx = new XMLHttpRequest();
     ajx.onreadystatechange = function () {
         if (ajx.readyState == 4 && ajx.status == 200) {
             document.getElementById("confirmation_msg_pref").innerHTML = ajx.responseText;
@@ -68,5 +68,5 @@ btnEmailPref.addEventListener("click", function() {
     };
     ajx.open("POST", "./app/controllers/UsersController.php", true);
     ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    ajx.send(emailPrefInfo);
+    ajx.send(action);
 });

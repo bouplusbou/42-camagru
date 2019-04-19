@@ -5,23 +5,92 @@ require_once __DIR__.'/../models/Comment.php';
 require_once __DIR__.'/../models/Like.php';
 require_once __DIR__.'/../models/User.php';
 
-// if () {
-//     session_start();
-
-//     require_once '../../config/database.php';
-//     $PDO = new PDO($DB_DSN, $DB_USER, $DB_PASSWORD);
-//     $PDO->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-//     $req = $PDO->query('SELECT * FROM posts');
-//     $posts = $req->fetchAll();
-//     foreach ($posts as $post) {
-//         if ($post['id_user'] === $_SESSION['id_user']) {
-//             $posts_photos[] = $post["photo_name"];
-//         }
-//     }
-//     echo end($posts_photos);
-// }
 
 
+
+/////////// Views ///////////
+
+
+function view_galery() {
+    $posts = Post::getAllPosts();
+    require_once __DIR__.'/../views/pages/galery.php';
+}
+
+
+function view_one_post($id_post) {
+    $post = Post::getOnePost($id_post);
+    $comments = Comment::getComments($id_post);
+    require_once __DIR__.'/../views/pages/view_post.php';
+}
+
+
+function view_post_upload() {
+    $maxsize = 1048576;
+    if ($_FILES['img']['size'] > $maxsize) {
+        echo "Le fichier est trop gros";
+        exit;
+    }
+    $valid_ext = array( 'png' );
+    $file_ext = strtolower(  substr(  strrchr($_FILES['img']['name'], '.')  ,1)  );
+    if (!in_array($file_ext, $valid_ext)) {
+        echo "Extension incorrecte";
+        exit;
+    }
+    $timestamp = time();
+	$filename = $timestamp.'.png';
+    $path = __DIR__."/../assets/images/user_img/".$filename;
+    $res = move_uploaded_file($_FILES['img']['tmp_name'], $path);
+
+    function resize_imagepng($file, $w, $h) {
+        list($width, $height) = getimagesize($file);
+        $src = imagecreatefrompng($file);
+        $dst = imagecreatetruecolor($w, $h);
+        imagecopyresampled($dst, $src, 0, 0, 0, 0, $w, $h, $width, $height);
+        return $dst;
+    }
+    $img = resize_imagepng($path, 640, 480);
+    imagepng($img, $path);
+    create_post_upload($filename);
+}
+
+function view_my_posts() {
+    if (isset($_SESSION['username'])) {
+        $user_posts = Post::getUserPosts($_SESSION['username']);
+        require_once __DIR__.'/../views/pages/my_posts.php';
+    } else {
+        require_once __DIR__.'/../views/pages/please_loggin.php';
+    }
+}
+
+function view_post_webcam() {
+    if (isset($_SESSION['username'])) {
+        $stickers = array('beard', 'fries', 'grumpy', 'hands', 'pate', 'thug');
+        $posts = Post::getAllPosts();
+        require_once __DIR__.'/../views/pages/post_webcam.php';
+    } else {
+        require_once __DIR__.'/../views/pages/please_loggin.php';
+    }
+}
+
+
+
+
+
+
+/////////// CRUD ///////////
+
+
+
+if (isset($_POST['action']) && $_POST['action'] === 'get_thumbnails') {
+    session_start();
+    $posts = Post::getAllPostsAsArray();
+    foreach ($posts as $post) {
+        if ($post['id_user'] === $_SESSION['id_user']) {
+            $posts_photos[] = $post["photo_name"];
+        }
+    }
+    echo end($posts_photos);
+}
 
 if (isset($_POST['action']) && $_POST['action'] === 'webcam_img_montage') {
     session_start();
@@ -56,7 +125,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'webcam_img_montage') {
         $filepath = '../assets/images/post_img/'.$filename;
         imagepng($img, $filepath);
     
-        createPost($filename, $_SESSION['id_user']);
+        create_post($filename, $_SESSION['id_user']);
     
         imagedestroy($img);
         imagedestroy($sticker);
@@ -90,7 +159,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'upload_img_montage') {
         $filepath = '../assets/images/post_img/'.$filename;
         imagepng($img, $filepath);
     
-        createPost($filename, $_SESSION['id_user']);
+        create_post($filename, $_SESSION['id_user']);
     
         imagedestroy($img);
         imagedestroy($sticker);
@@ -148,89 +217,20 @@ if (isset($_POST['action']) && $_POST['action'] === 'create_comment') {
     }
 }
 
-function view_post_webcam() {
-    if (isset($_SESSION['username'])) {
-        $stickers = array('beard', 'fries', 'grumpy', 'hands', 'pate', 'thug');
-        $posts = Post::getAllPosts();
-        require_once __DIR__.'/../views/pages/post_webcam.php';
-    } else {
-        require_once __DIR__.'/../views/pages/please_loggin.php';
-    }
-}
 
-function createPost($photo_path, $id_user) {
+
+function create_post($photo_path, $id_user) {
     $creation_date = date("Y-m-d H:i:s");
     $post_data = array($photo_path, $creation_date, $id_user);
     $post = Post::insertPost($post_data);
 }
 
 
-
-
-function newPostWithImg($filename) {
+function create_post_upload($filename) {
     if (isset($_SESSION['username'])) {
         $stickers = array('beard', 'fries', 'grumpy', 'hands', 'pate', 'thug');
         $posts = Post::getAllPosts();
         require_once __DIR__.'/../views/pages/post_upload.php';
-    } else {
-        require_once __DIR__.'/../views/pages/please_loggin.php';
-    }
-}
-
-
-
-
-
-
-/////////// Views ///////////
-
-
-function view_galery() {
-    $posts = Post::getAllPosts();
-    require_once __DIR__.'/../views/pages/galery.php';
-}
-
-
-function view_one_post($id_post) {
-    $post = Post::getOnePost($id_post);
-    $comments = Comment::getComments($id_post);
-    require_once __DIR__.'/../views/pages/view_post.php';
-}
-
-
-function view_post_upload() {
-    $maxsize = 1048576;
-    if ($_FILES['img']['size'] > $maxsize) {
-        echo "Le fichier est trop gros";
-        exit;
-    }
-    $valid_ext = array( 'png' );
-    $file_ext = strtolower(  substr(  strrchr($_FILES['img']['name'], '.')  ,1)  );
-    if (!in_array($file_ext, $valid_ext)) {
-        echo "Extension incorrecte";
-        exit;
-    }
-    $timestamp = time();
-	$filename = $timestamp.'.png';
-    $path = __DIR__."/../assets/images/user_img/".$filename;
-    $res = move_uploaded_file($_FILES['img']['tmp_name'], $path);
-
-    function resize_imagepng($file, $w, $h) {
-        list($width, $height) = getimagesize($file);
-        $src = imagecreatefrompng($file);
-        $dst = imagecreatetruecolor($w, $h);
-        imagecopyresampled($dst, $src, 0, 0, 0, 0, $w, $h, $width, $height);
-        return $dst;
-    }
-    $img = resize_imagepng($path, 640, 480);
-    imagepng($img, $path);
-    newPostWithImg($filename);
-}
-
-function view_my_posts() {
-    if (isset($_SESSION['username'])) {
-        $user_posts = Post::getUserPosts($_SESSION['username']);
-        require_once __DIR__.'/../views/pages/my_posts.php';
     } else {
         require_once __DIR__.'/../views/pages/please_loggin.php';
     }
