@@ -5,7 +5,7 @@ if ($_SERVER['REQUEST_METHOD']) {
 	exit;
 }
 
-require "database.php";
+require_once "database.php";
 
 try {
  

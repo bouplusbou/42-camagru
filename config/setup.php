@@ -5,7 +5,7 @@ if ($_SERVER['REQUEST_METHOD']) {
 	exit;
 }
 
-require "database.php";
+require_once "database.php";
 
 try {
     $db = new PDO('mysql:host=127.0.0.1', $DB_USER, $DB_PASSWORD);

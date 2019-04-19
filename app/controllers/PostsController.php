@@ -1,5 +1,28 @@
 <?php
 
+require_once __DIR__.'/../models/Post.php';
+require_once __DIR__.'/../models/Comment.php';
+require_once __DIR__.'/../models/Like.php';
+require_once __DIR__.'/../models/User.php';
+
+// if () {
+//     session_start();
+
+//     require_once '../../config/database.php';
+//     $PDO = new PDO($DB_DSN, $DB_USER, $DB_PASSWORD);
+//     $PDO->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+//     $req = $PDO->query('SELECT * FROM posts');
+//     $posts = $req->fetchAll();
+//     foreach ($posts as $post) {
+//         if ($post['id_user'] === $_SESSION['id_user']) {
+//             $posts_photos[] = $post["photo_name"];
+//         }
+//     }
+//     echo end($posts_photos);
+// }
+
+
+
 if (isset($_POST['action']) && $_POST['action'] === 'webcam_img_montage') {
     session_start();
     if( isset($_POST['img_data']) && isset($_POST['sticker_src']) && isset($_POST['placement_x']) && isset($_POST['placement_y']) ){
@@ -78,7 +101,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'upload_img_montage') {
 }
 
 if (isset($_POST['action']) && $_POST['action'] === 'create_like') {
-    require __DIR__.'/../models/Like.php';
     if (isset($_POST['id_post']) && isset($_POST['id_user'])) {
         if (Like::alreadyLiked($_POST['id_post'], $_POST['id_user'])) {
             Like::deleteLike($_POST['id_post'], $_POST['id_user']);
@@ -92,7 +114,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'create_like') {
 
 if (isset($_POST['action']) && $_POST['action'] === 'delete_post') {
     session_start();
-    require __DIR__.'/../models/Post.php';
     if (isset($_POST['id_post']) && isset($_POST['id_user'])) {
         if ($_SESSION['id_user'] === $_POST['id_user']) {
             Post::deletePost($_POST['id_post'], $_POST['id_user']);
@@ -104,8 +125,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_post') {
 }
 
 if (isset($_POST['action']) && $_POST['action'] === 'create_comment') {
-    require __DIR__.'/../models/Comment.php';
-    require __DIR__.'/../models/User.php';
     $creation_date = date("Y-m-d H:i:s");
     $comment_data = array($_POST['comment'], $creation_date, $_POST['id_user'], $_POST['id_post']);
     // var_dump($comment_data);
@@ -129,39 +148,57 @@ if (isset($_POST['action']) && $_POST['action'] === 'create_comment') {
     }
 }
 
-function newPost() {
+function view_post_webcam() {
     if (isset($_SESSION['username'])) {
         $stickers = array('beard', 'fries', 'grumpy', 'hands', 'pate', 'thug');
-        require './app/models/Post.php';
         $posts = Post::getAllPosts();
-        require './app/views/pages/post_webcam.php';
+        require_once __DIR__.'/../views/pages/post_webcam.php';
     } else {
-        require './app/views/pages/please_loggin.php';
+        require_once __DIR__.'/../views/pages/please_loggin.php';
     }
 }
 
 function createPost($photo_path, $id_user) {
-    require '../models/Post.php';
     $creation_date = date("Y-m-d H:i:s");
     $post_data = array($photo_path, $creation_date, $id_user);
     $post = Post::insertPost($post_data);
 }
 
-function listPosts() {
-    require './app/models/Post.php';
-    $posts = Post::getAllPosts();
-    require './app/views/pages/galery.php';
+
+
+
+function newPostWithImg($filename) {
+    if (isset($_SESSION['username'])) {
+        $stickers = array('beard', 'fries', 'grumpy', 'hands', 'pate', 'thug');
+        $posts = Post::getAllPosts();
+        require_once __DIR__.'/../views/pages/post_upload.php';
+    } else {
+        require_once __DIR__.'/../views/pages/please_loggin.php';
+    }
 }
 
-function view_post($id_post) {
-    require './app/models/Post.php';
-    require './app/models/Comment.php';
+
+
+
+
+
+/////////// Views ///////////
+
+
+function view_galery() {
+    $posts = Post::getAllPosts();
+    require_once __DIR__.'/../views/pages/galery.php';
+}
+
+
+function view_one_post($id_post) {
     $post = Post::getOnePost($id_post);
     $comments = Comment::getComments($id_post);
-    require './app/views/pages/view_post.php';
+    require_once __DIR__.'/../views/pages/view_post.php';
 }
 
-function uploadImg() {
+
+function view_post_upload() {
     $maxsize = 1048576;
     if ($_FILES['img']['size'] > $maxsize) {
         echo "Le fichier est trop gros";
@@ -190,23 +227,11 @@ function uploadImg() {
     newPostWithImg($filename);
 }
 
-function newPostWithImg($filename) {
+function view_my_posts() {
     if (isset($_SESSION['username'])) {
-        $stickers = array('beard', 'fries', 'grumpy', 'hands', 'pate', 'thug');
-        require __DIR__.'/../models/Post.php';
-        $posts = Post::getAllPosts();
-        require __DIR__.'/../views/pages/post_upload.php';
-    } else {
-        require __DIR__.'/../views/pages/please_loggin.php';
-    }
-}
-
-function my_posts() {
-    if (isset($_SESSION['username'])) {
-        require __DIR__.'/../models/Post.php';
         $user_posts = Post::getUserPosts($_SESSION['username']);
-        require __DIR__.'/../views/pages/my_posts.php';
+        require_once __DIR__.'/../views/pages/my_posts.php';
     } else {
-        require __DIR__.'/../views/pages/please_loggin.php';
+        require_once __DIR__.'/../views/pages/please_loggin.php';
     }
 }
