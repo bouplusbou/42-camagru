@@ -1,3 +1,8 @@
+<?php 
+$token = bin2hex(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
+$_SESSION['token'] = $token;
+?>
+
 <h1>Account</h1>
 
 <h2>Hi <?= $_SESSION['username'] ?>,</h2>
@@ -44,10 +49,6 @@
     <button id="btn_email_pref">Change email preferences</button>
 </div>
 
-<script type="text/javascript">
-<?php if (isset($_SESSION['username']) && isset($_SESSION['email'])) { ?>
-    let username = "<?= $_SESSION['username']; ?>";
-    let email = "<?= $_SESSION['email']; ?>";
-<?php } ?>
-</script>
+<input type="hidden" name="token" id="token" value="<?= $token; ?>" />
+
 <script type="text/javascript" src="./app/assets/js/account.js"></script>

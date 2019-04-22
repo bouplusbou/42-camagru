@@ -1,24 +1,24 @@
+<?php 
+$token = bin2hex(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
+$_SESSION['token'] = $token;
+?>
+
 <h1>NEW POST</h1>
 
-<!-- Stream video via webcam -->
 <div class="video-wrap">
 	<video id="video" playsinline autoplay></video>
 	<div id="overlay"></div>
 </div>
 
-<!-- Trigger canvas web API -->
 <div id="control">
-	<!-- <button id="snap">Capture</button> -->
 </div>
 
-<!-- <div id="control">
-	<button id="upload">Upload an image</button>
-</div> -->
 
 <form method="post" action="index.php?p=post_upload" enctype="multipart/form-data">
      <label for="img">Upload an image (PNG only | max. 1 Mo) :</label><br />
      <input type="file" name="img" id="img" /><br />
      <input type="hidden" name="MAX_FILE_SIZE" value="1048576" />
+	 <input type="hidden" name="token" id="token" value="<?= $token; ?>" />
      <input type="submit" name="submit" value="Envoyer" />
 </form>
 

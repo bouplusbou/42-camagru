@@ -1,3 +1,8 @@
+<?php 
+$token = bin2hex(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
+$_SESSION['token'] = $token;
+?>
+
 <h1>MY POSTS</h1>
 
 <?php foreach ($user_posts as $user_post): ?>
@@ -19,6 +24,7 @@
     </div>
 </div>
 <?php endforeach; ?>
+<input type="hidden" name="token" id="token" value="<?= $token; ?>" />
 
 <script type="text/javascript" src="./app/assets/js/myPosts.js"></script>
 

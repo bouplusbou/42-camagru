@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__.'/../models/User.php';
+require_once __DIR__.'/check_token.php';
 
 
 
@@ -9,7 +10,13 @@ require_once __DIR__.'/../models/User.php';
 
 function view_signup() {
     if (isset($_POST['submit']) && $_POST['submit'] === "create") {
-        create_user();
+        if (check_token()) {
+            create_user();
+        }  else {
+            // echo $_SESSION['token'];
+            // echo $_POST['token'];
+            // echo "VERIF NOT OK";
+        }
     }
     require_once './app/views/pages/signup.php';
 }
@@ -17,25 +24,32 @@ function view_signup() {
 
 function view_login() {
     if (isset($_POST['submit']) && $_POST['submit'] === "login") {
-        if ($user = User::userCredsOK($_POST)) {
-            if ($user['confirmed'] === '1') {
-                $_SESSION['username'] = $user['username'];
-                $_SESSION['id_user'] = $user['id_user'];
-                $_SESSION['email'] = $user['email'];
-                $_SESSION['email_when_comment'] = $user['email_when_comment'];
-                header('Location: index.php');
+        if (check_token()) {
+            if ($user = User::userCredsOK($_POST)) {
+                if ($user['confirmed'] === '1') {
+                    $_SESSION['username'] = $user['username'];
+                    $_SESSION['id_user'] = $user['id_user'];
+                    $_SESSION['email'] = $user['email'];
+                    $_SESSION['email_when_comment'] = $user['email_when_comment'];
+                    header('Location: index.php');
+                } else {
+                    $error_msg = "Sorry but you have to confirm your email address first";
+                }
             } else {
-                $error_msg = "Sorry but you have to confirm your email address first";
+                $error_msg = "Sorry wrong username or password";
             }
         } else {
-            $error_msg = "Sorry wrong username or password";
+            // echo $_SESSION['token'];
+            // echo $_POST['token'];
+            // echo "VERIF NOT OK";
         }
-    }
+    } 
     require_once './app/views/pages/login.php';
 }
 
 
 function view_logout() {
+    session_start();
     if (isset($_SESSION['username'])) {
         unset($_SESSION['username']);
     }
@@ -48,6 +62,10 @@ function view_logout() {
     if (isset($_SESSION['email_when_comment'])) {
         unset($_SESSION['email_when_comment']);
     }
+    if (isset($_SESSION['token'])) {
+        unset($_SESSION['token']);
+    }
+    session_destroy();
     header('Location: index.php');
 }
 
@@ -173,78 +191,106 @@ function create_user() {
 // Update email preferences
 if (isset($_POST['action']) && $_POST['action'] === 'update_email_pref') {
     session_start();
-    User::updateEmailPref($_POST['username'], $_POST['email_pref']);
-    $_SESSION['email_when_comment'] = $_POST['email_pref'];
-    echo "email preferences updated";
+    if (isset($_POST['email_pref']) && isset($_SESSION['email_when_comment']) && isset($_SESSION['username'])) {
+        if (check_token()) {
+            User::updateEmailPref($_SESSION['username'], $_POST['email_pref']);
+            $_SESSION['email_when_comment'] = $_POST['email_pref'];
+            echo "email preferences updated";
+        } else {
+            // echo $_SESSION['token'];
+            // echo $_POST['token'];
+            // echo "VERIF NOT OK";
+        }
+    }
 }
-
 
 // Update username
-if (isset($_POST['newUsername']) && isset($_POST['pswd']) && isset($_POST['username'])) {
+if (isset($_POST['action']) && $_POST['action'] === 'update_username') {
     session_start();
-    $pswd = $_POST['pswd'];
-    $new_username = $_POST['newUsername'];
-    $current_username = $_POST['username'];
-    if (User::pswdUsernameMatch($pswd, $current_username)) {
-        if (!preg_match("/^[A-Za-z0-9]{3,10}$/", $new_username)) {
-            echo 'Please enter a username between 3 and 10 characters containing only numbers and letters.';
-            exit;
-        } else if (User::usernameExists($new_username)) {
-            echo 'This username is already taken.';
+    if (isset($_POST['newUsername']) && isset($_POST['pswd']) && isset($_SESSION['username'])) {
+        if (check_token()) {
+            $pswd = $_POST['pswd'];
+            $new_username = $_POST['newUsername'];
+            $current_username = $_SESSION['username'];
+            if (User::pswdUsernameMatch($pswd, $current_username)) {
+                if (!preg_match("/^[A-Za-z0-9]{3,10}$/", $new_username)) {
+                    echo 'Please enter a username between 3 and 10 characters containing only numbers and letters.';
+                    exit;
+                } else if (User::usernameExists($new_username)) {
+                    echo 'This username is already taken.';
+                } else {
+                    User::updateUsername($current_username, $new_username);
+                    $_SESSION['username'] = $new_username;
+                    echo "Username changed";
+                }
+            } else {
+                echo "password KO";
+            }
         } else {
-            User::updateUsername($current_username, $new_username);
-            $_SESSION['username'] = $new_username;
-            echo "Username changed";
+            // echo $_SESSION['token'];
+            // echo $_POST['token'];
+            // echo "VERIF NOT OK";
         }
-    } else {
-        echo "password KO";
     }
 }
-
 
 // Update email
-if (isset($_POST['newEmail']) && isset($_POST['pswd']) && isset($_POST['username'])) {
+if (isset($_POST['action']) && $_POST['action'] === 'update_email') {
     session_start();
-    $pswd = $_POST['pswd'];
-    $new_email = $_POST['newEmail'];
-    $username = $_POST['username'];
-    if (User::pswdUsernameMatch($pswd, $username)) {
-        if (!filter_var($new_email, FILTER_VALIDATE_EMAIL)) {
-            echo 'Please enter a proper email address.';
-        }
-        else if (User::emailExists($new_email)) {
-            echo 'This email already exists.';
+    if (isset($_POST['newEmail']) && isset($_POST['pswd']) && isset($_SESSION['username'])) {
+        if (check_token()) {
+            $pswd = $_POST['pswd'];
+            $new_email = $_POST['newEmail'];
+            $username = $_SESSION['username'];
+            if (User::pswdUsernameMatch($pswd, $username)) {
+                if (!filter_var($new_email, FILTER_VALIDATE_EMAIL)) {
+                    echo 'Please enter a proper email address.';
+                }
+                else if (User::emailExists($new_email)) {
+                    echo 'This email already exists.';
+                } else {
+                    User::updateEmail($username, $new_email);
+                    $_SESSION['email'] = $new_email;
+                    echo "Email changed";
+                }
+            } else {
+                echo "password KO";
+            }
         } else {
-            User::updateEmail($username, $new_email);
-            $_SESSION['email'] = $new_email;
-            echo "Email changed";
+            // echo $_SESSION['token'];
+            // echo $_POST['token'];
+            // echo "VERIF NOT OK";
         }
-    } else {
-        echo "password KO";
     }
 }
-
 
 // Update password via account
-if (isset($_POST['newPassword']) && isset($_POST['currentPswd']) && isset($_POST['email']) && isset($_POST['username'])) {
+if (isset($_POST['action']) && $_POST['action'] === 'update_password') {
     session_start();
-    $current_pswd = $_POST['currentPswd'];
-    $new_pswd = $_POST['newPassword'];
-    $hashed_pswd = password_hash($new_pswd, PASSWORD_BCRYPT);
-    $email = $_POST['email'];
-    $username = $_POST['username'];
-    if (User::pswdUsernameMatch($current_pswd, $username)) {
-        if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/", $new_pswd)) {
-            echo 'Please enter a password at least 6 characters long containing at least one upper letter, one lower letter and one number.';
+    if (isset($_POST['newPassword']) && isset($_POST['currentPswd']) && isset($_SESSION['email']) && isset($_SESSION['username'])) {
+        if (check_token()) {
+            $current_pswd = $_POST['currentPswd'];
+            $new_pswd = $_POST['newPassword'];
+            $hashed_pswd = password_hash($new_pswd, PASSWORD_BCRYPT);
+            $email = $_SESSION['email'];
+            $username = $_SESSION['username'];
+            if (User::pswdUsernameMatch($current_pswd, $username)) {
+                if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/", $new_pswd)) {
+                    echo 'Please enter a password at least 6 characters long containing at least one upper letter, one lower letter and one number.';
+                } else {
+                    User::updatePswd($email, $hashed_pswd);
+                    echo "Password changed";
+                }
+            } else {
+                echo "password KO";
+            }
         } else {
-            User::updatePswd($email, $hashed_pswd);
-            echo "Password changed";
+            echo $_SESSION['token'];
+            echo $_POST['token'];
+            echo "VERIF NOT OK";
         }
-    } else {
-        echo "password KO";
     }
 }
-
 
 // Update password via reset password email
 if (isset($_POST['action']) && $_POST['action'] === 'reset_password_email' && isset($_POST['new_pswd']) && isset($_POST['email']) && isset($_POST['hash'])) {
@@ -270,21 +316,28 @@ if (isset($_POST['action']) && $_POST['action'] === 'reset_password_email' && is
 
 // send reset password
 if (isset($_POST['action']) && $_POST['action'] === 'reset_password_email' && isset($_POST['email'])) {
-    $email = $_POST['email'];
-    if ($verif_hash = User::emailExists($email)) {
-        $subject = 'Reset your password';
-        $message = '
+    session_start();
+    if (check_token()) {
+        $email = $_POST['email'];
+        if ($verif_hash = User::emailExists($email)) {
+            $subject = 'Reset your password';
+            $message = '
+        
+            Hi,
+            We\'ve just received  a request to reset your password. If you didn\'t make the request, just ignore this email.
+            Otherwise you can reset your password using this link:
     
-        Hi,
-        We\'ve just received  a request to reset your password. If you didn\'t make the request, just ignore this email.
-        Otherwise you can reset your password using this link:
-
-        http://127.0.0.1:8080/index.php?p=reset_password_email&email='.$email.'&hash='.$verif_hash['verif_hash'].'
-    
-        Thanks,
-        The Camagru Team
-        ';
-        echo 'http://127.0.0.1:8080/index.php?p=reset_password_email&email='.$email.'&hash='.$verif_hash['verif_hash'];
-        mail($email, $subject, $message);
+            http://127.0.0.1:8080/index.php?p=reset_password_email&email='.$email.'&hash='.$verif_hash['verif_hash'].'
+        
+            Thanks,
+            The Camagru Team
+            ';
+            echo 'http://127.0.0.1:8080/index.php?p=reset_password_email&email='.$email.'&hash='.$verif_hash['verif_hash'];
+            mail($email, $subject, $message);
+        }
+    } else {
+        // echo $_SESSION['token'];
+        // echo $_POST['token'];
+        // echo "VERIF NOT OK";
     }
 }

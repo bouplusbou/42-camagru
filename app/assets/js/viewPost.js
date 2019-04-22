@@ -1,9 +1,11 @@
 const commentBtn = document.getElementById('comment_btn');
 const commentInput = document.getElementById('comment_input');
 const commentCont = document.getElementById('comments_container');
+const token = document.getElementById('token').value;
 
 commentBtn.addEventListener("click", function() {
-    const action = 'action=create_comment&comment='+commentInput.value+'&id_post='+commentBtn.getAttribute('id_post')+'&id_post_creator='+commentBtn.getAttribute('id_post_creator');
+    console.log(token);
+    const action = 'action=create_comment&comment='+commentInput.value+'&id_post='+commentBtn.getAttribute('id_post')+'&id_post_creator='+commentBtn.getAttribute('id_post_creator')+'&token='+token;
 
     const ajx = new XMLHttpRequest();
     ajx.onreadystatechange = function () {
@@ -30,7 +32,7 @@ const likeBtn = document.getElementById('like_btn');
 
 likeBtn.addEventListener("click", function(event) {
     const idPost = event.target.getAttribute('id_post');
-    const action = 'action=create_like&id_post='+idPost;
+    const action = 'action=create_like&id_post='+idPost+'&token='+token;
 
     const ajx = new XMLHttpRequest();
     ajx.onreadystatechange = function () {

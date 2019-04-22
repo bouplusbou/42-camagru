@@ -32,12 +32,3 @@ endif; ?>
 <?php } ?>
 </script>
 <script type="text/javascript" src="./app/assets/js/resetPasswordEmail.js"></script>
-
-
-
-
-
-
-
-<!-- // check if old password ok
-// check if new password respect security -->

@@ -11,8 +11,10 @@ const inputUsernamePassword = document.getElementById('input_username_password')
 const inputPswdPassword = document.getElementById('input_pswd_password');
 const radioPrefYes = document.getElementById('email_pref_yes');
 
+const token = document.getElementById('token').value;
+
 btnUsername.addEventListener("click", function() {
-    const action = 'newUsername='+inputUsername.value+'&pswd='+inputUsernamePassword.value+'&username='+username;
+    const action = 'action=update_username&newUsername='+inputUsername.value+'&pswd='+inputUsernamePassword.value+'&token='+token;
 
     const ajx = new XMLHttpRequest();
     ajx.onreadystatechange = function () {
@@ -26,7 +28,7 @@ btnUsername.addEventListener("click", function() {
 });
 
 btnEmail.addEventListener("click", function() {
-    const action = 'newEmail='+inputEmail.value+'&pswd='+inputEmailPassword.value+'&username='+username;
+    const action = 'action=update_email&newEmail='+inputEmail.value+'&pswd='+inputEmailPassword.value+'&token='+token;
 
     const ajx = new XMLHttpRequest();
     ajx.onreadystatechange = function () {
@@ -40,7 +42,7 @@ btnEmail.addEventListener("click", function() {
 });
 
 btnPswd.addEventListener("click", function() {
-    const action = 'newPassword='+inputPswd.value+'&currentPswd='+inputPswdPassword.value+'&email='+email+'&username='+username;
+    const action = 'action=update_password&newPassword='+inputPswd.value+'&currentPswd='+inputPswdPassword.value+'&token='+token;
 
     const ajx = new XMLHttpRequest();
     ajx.onreadystatechange = function () {
@@ -58,7 +60,7 @@ btnEmailPref.addEventListener("click", function() {
     if (radioPrefYes.checked) {
         emailPref = '1';
     }
-    const action = 'action=update_email_pref&email_pref='+emailPref+'&username='+username;
+    const action = 'action=update_email_pref&email_pref='+emailPref+'&token='+token;
 
     const ajx = new XMLHttpRequest();
     ajx.onreadystatechange = function () {

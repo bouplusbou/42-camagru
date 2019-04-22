@@ -1,3 +1,5 @@
+const token = document.getElementById('token').value;
+
 /////////////////////////////////////////////////////////////////////////////// apply the right sticker
 const stickers = document.getElementById('sticker_container');
 const overlay = document.getElementById('overlay');
@@ -102,7 +104,7 @@ function click(event){
         const sticker_src = selected_sticker_src;
         
         // send to the server using AJAX
-        const action = "action=upload_img_montage&placement_x="+placement_x+"&placement_y="+placement_y+"&img_src="+img_src+"&sticker_src="+sticker_src;
+        const action = "action=upload_img_montage&placement_x="+placement_x+"&placement_y="+placement_y+"&img_src="+img_src+"&sticker_src="+sticker_src+'&token='+token;
         const ajx = new XMLHttpRequest();
         ajx.onreadystatechange = function () {
             if (ajx.readyState == 4 && ajx.status == 200) {

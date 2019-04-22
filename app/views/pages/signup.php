@@ -1,3 +1,7 @@
+<?php 
+$token = bin2hex(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
+$_SESSION['token'] = $token;
+?>
 <h1>SIGNUP</h1>
 <div class="signup_wrapper">
     <div class="form">
@@ -6,6 +10,7 @@
             <input placeholder="email" type="text" value="" name="email" />
             <input placeholder="password" type="password" value="" name="pswd" />
             <input type="submit" value="create" name="submit" />
+            <input type="hidden" name="token" id="token" value="<?= $token; ?>" />
         </form>
         <?php if (isset($errors) && $errors !== ''):
             foreach ($errors as $error) {

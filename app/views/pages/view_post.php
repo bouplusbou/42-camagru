@@ -1,3 +1,8 @@
+<?php 
+$token = bin2hex(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
+$_SESSION['token'] = $token;
+?>
+
 <h1>View Post <?= $id_post ?></h1>
 
 <div class="post_container">
@@ -24,6 +29,7 @@
         <?php if (isset($_SESSION['username']) && isset($_SESSION['id_user'])) { ?>
 		<input placeholder="Type your comment here..." type="text" value="" name="comment" id="comment_input" />
 		<input type="submit" value="comment" name="submit" id="comment_btn" id_user="<?= $_SESSION['id_user']; ?>" id_post="<?= $post['id_post']; ?>" id_post_creator="<?= $post['id_user']; ?>" />
+        <input type="hidden" name="token" id="token" value="<?= $token; ?>" />
         <?php } ?>
     </div>
 </div>

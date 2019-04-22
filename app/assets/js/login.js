@@ -1,4 +1,5 @@
 const resetBtn = document.getElementById('reset_pswd');
+const token = document.getElementById('token').value;
 
 resetBtn.addEventListener("click", function() {
     let email = window.prompt("Please enter your email if you want to reset your password");
@@ -6,7 +7,7 @@ resetBtn.addEventListener("click", function() {
     if (email) {
         const regex = /\S+@\S+\.\S+/ ;
         if (regex.test(String(email).toLowerCase())) {
-            const action = 'action=reset_password_email&email='+email;
+            const action = 'action=reset_password_email&email='+email+'&token='+token;
 
             const ajx = new XMLHttpRequest();
             ajx.onreadystatechange = function () {

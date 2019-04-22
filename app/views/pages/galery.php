@@ -1,3 +1,7 @@
+<?php 
+$token = bin2hex(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
+$_SESSION['token'] = $token;
+?>
 <h1>GALERY</h1>
 
 <?php foreach ($posts as $post): ?>
@@ -18,10 +22,8 @@
     </div>
 </div>
 <?php endforeach; ?>
+<input type="hidden" name="token" id="token" value="<?= $token; ?>" />
 
-<?php if (isset($_SESSION['username']) && isset($_SESSION['id_user'])) { ?>
 <script type="text/javascript" src="./app/assets/js/galery.js"></script>
-<?php } ?>
-
 
 <div id="message" style="color:red;"></div>

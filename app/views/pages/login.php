@@ -1,12 +1,17 @@
+<?php 
+$token = bin2hex(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
+$_SESSION['token'] = $token;
+if (isset($confirmation_msg)) {
+	echo $confirmation_msg;
+}
+?>
 <h1>LOGIN</h1>
-<?php if (isset($confirmation_msg)):
-			echo $confirmation_msg;
-endif; ?>
 <div class="login_wrapper">
 	<div class="form">
 		<form id="form_login" action="index.php?p=login" method="post">
 			<input placeholder="username" type="text" value="" name="username" />
 			<input placeholder="password" type="password" value="" name="pswd" />
+			<input type="hidden" name="token" id="token" value="<?= $token; ?>" />
 			<input type="submit" value="login" name="submit" />
 		</form>
 		<?php if (isset($error_msg)):
