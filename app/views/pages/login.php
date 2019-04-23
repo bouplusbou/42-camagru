@@ -5,7 +5,11 @@ if (isset($confirmation_msg)) {
 	echo $confirmation_msg;
 }
 ?>
-<h1>LOGIN</h1>
+<section class="section">
+  <div class="container">
+    <h1 class="title">Login</h1>
+  </div>
+</section>
 <div class="login_wrapper">
 	<div class="form">
 		<form id="form_login" action="index.php?p=login" method="post">

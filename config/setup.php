@@ -21,13 +21,20 @@ try {
             FLUSH PRIVILEGES;")
     or die(print_r($db->errorInfo(), true));
     print("Created ".$DB_NAME." database.\n");
+
+    $db->exec("ALTER DATABASE
+            `$DB_NAME`
+            CHARACTER SET = utf8mb4
+            COLLATE = utf8mb4_unicode_ci;")
+    or die(print_r($db->errorInfo(), true));
+    print($DB_NAME." database allows emojis now !\n");
     
     $DB_DSN = 'mysql:dbname=camagru;host=127.0.0.1';
     $db = new PDO($DB_DSN, $DB_USER, $DB_PASSWORD);
     $db->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 
     $table = "users";
-    $sql ="CREATE table $table(
+    $sql ="CREATE TABLE $table(
     id_user SMALLINT( 11 ) AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR( 40 ) NOT NULL, 
     email VARCHAR( 255 ) NOT NULL, 
@@ -40,7 +47,7 @@ try {
     print("Created $table table.\n");
 
     $table = "posts";
-    $sql ="CREATE table $table(
+    $sql ="CREATE TABLE $table(
     id_post SMALLINT( 11 ) AUTO_INCREMENT PRIMARY KEY,
     photo_name VARCHAR( 500 ) NOT NULL, 
     creation_date DATETIME NOT NULL,
@@ -50,7 +57,7 @@ try {
     print("Created $table table.\n");
 
     $table = "comments";
-    $sql ="CREATE table $table(
+    $sql ="CREATE TABLE $table(
     id_comment SMALLINT( 11 ) AUTO_INCREMENT PRIMARY KEY,
     comment VARCHAR( 8000 ) NOT NULL, 
     creation_date DATETIME NOT NULL,
@@ -62,7 +69,7 @@ try {
     print("Created $table table.\n");
 
     $table = "likes";
-    $sql ="CREATE table $table(
+    $sql ="CREATE TABLE $table(
     id_like SMALLINT( 11 ) AUTO_INCREMENT PRIMARY KEY,
     id_user SMALLINT( 11 ),
     FOREIGN KEY (id_user) REFERENCES users(id_user),

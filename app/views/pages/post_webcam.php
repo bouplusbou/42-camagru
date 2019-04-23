@@ -3,12 +3,37 @@ $token = bin2hex(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
 $_SESSION['token'] = $token;
 ?>
 
-<h1>NEW POST</h1>
+<section class="section">
+  <div class="container">
+    <h1 class="title">New post</h1>
+  </div>
+</section>
 
-<div class="video-wrap">
-	<video id="video" playsinline autoplay></video>
-	<div id="overlay"></div>
+<!-- <section class="section">
+  <div class="columns">
+    <div class="column is-2"></div>
+    <div class="column is-6">
+      <div class="card">
+        <div class="card-image">
+          <figure class="image is-640x480">
+
+          </figure>
+        </div>
+
+      </div>
+
+    </div>
+    <div class="column is-2"></div>
+    <div class="column is-2"></div>
+  </div>
+</section> -->
+
+
+<div class="video_wrap">
+  <video id="video" playsinline autoplay></video>
+  <div id="overlay"></div>
 </div>
+
 
 <div id="control">
 </div>

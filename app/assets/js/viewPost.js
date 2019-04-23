@@ -4,7 +4,7 @@ const commentCont = document.getElementById('comments_container');
 const token = document.getElementById('token').value;
 
 commentBtn.addEventListener("click", function() {
-    console.log(token);
+    // console.log(token);
     const action = 'action=create_comment&comment='+commentInput.value+'&id_post='+commentBtn.getAttribute('id_post')+'&id_post_creator='+commentBtn.getAttribute('id_post_creator')+'&token='+token;
 
     const ajx = new XMLHttpRequest();
@@ -18,12 +18,8 @@ commentBtn.addEventListener("click", function() {
     ajx.send(action);
   
     const newDiv = document.createElement('div');
-    const newCommenter = document.createElement('b');
-    const newComment = document.createElement('p');
-    newCommenter.innerText = currentUsername;
-    newComment.innerText = commentInput.value;
-    commentCont.appendChild(newCommenter);
-    commentCont.appendChild(newComment);
+    newDiv.className = 'level-left';
+    newDiv.innerHTML = '<p><b>'+currentUsername+'</b>   '+commentInput.value+'</p>'
     commentCont.appendChild(newDiv);
 });
 

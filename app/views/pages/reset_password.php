@@ -1,4 +1,8 @@
-<h1>RESET PASSWORD</h1>
+<section class="section">
+  <div class="container">
+    <h1 class="title">Reset your password</h1>
+  </div>
+</section>
 
 <?php if (isset($confirmation_msg)): ?>
 <div class="reset_wrapper">

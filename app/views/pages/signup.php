@@ -2,7 +2,13 @@
 $token = bin2hex(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
 $_SESSION['token'] = $token;
 ?>
-<h1>SIGNUP</h1>
+
+<section class="section">
+  <div class="container">
+    <h1 class="title">Signup</h1>
+  </div>
+</section>
+
 <div class="signup_wrapper">
     <div class="form">
         <form id="form_create_user" action="index.php?p=signup" name="action" method="post">

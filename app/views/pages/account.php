@@ -3,7 +3,11 @@ $token = bin2hex(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
 $_SESSION['token'] = $token;
 ?>
 
-<h1>Account</h1>
+<section class="section">
+  <div class="container">
+    <h1 class="title">Account</h1>
+  </div>
+</section>
 
 <h2>Hi <?= $_SESSION['username'] ?>,</h2>
 

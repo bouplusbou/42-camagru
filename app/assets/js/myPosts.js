@@ -4,6 +4,7 @@ for (let i = 0; i < likeBtnArray.length; i++) {
     likeBtnArray[i].addEventListener("click", function(event) {
         const idPost = event.target.getAttribute('id_post');
         const action = 'action=create_like&id_post='+idPost+'&token='+token;
+        console.log(idPost);
     
         const ajx = new XMLHttpRequest();
         ajx.onreadystatechange = function () {

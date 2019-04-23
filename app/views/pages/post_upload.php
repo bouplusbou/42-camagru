@@ -3,7 +3,11 @@ $token = bin2hex(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
 $_SESSION['token'] = $token;
 ?>
 
-<h1>NEW POST WITH IMG</h1>
+<section class="section">
+  <div class="container">
+    <h1 class="title">New post</h1>
+  </div>
+</section>
 
 <div class="img_wrap">
 	<img id='uploaded_img' src="<?= './app/assets/images/user_img/'.$filename ?>" alt="">
