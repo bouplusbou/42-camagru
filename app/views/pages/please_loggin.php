@@ -1,8 +1,3 @@
-<section class="section">
-  <div class="container">
-  </div>
-</section>
-
 <section class="hero is-medium is-danger is-bold">
   <div class="hero-body">
     <div class="container">
@@ -10,7 +5,7 @@
         Please Loggin 🙏
       </h1>
       <h2 class="subtitle">
-        You try to enter into a zone only accessible if you are connected.
+        You are trying to enter in a restricted zone.
       </h2>
       <h2 class="subtitle">
         

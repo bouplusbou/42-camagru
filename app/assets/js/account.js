@@ -23,7 +23,6 @@ btnUsername.addEventListener("click", function() {
         a.remove()
     })
     const action = 'action=update_username&newUsername='+inputUsername.value+'&pswd='+inputUsernamePassword.value+'&token='+token;
-
     const ajx = new XMLHttpRequest();
     ajx.onreadystatechange = function () {
         if (ajx.readyState == 4 && ajx.status == 200) {
@@ -86,7 +85,6 @@ btnEmail.addEventListener("click", function() {
             inputEmail.value = "";
             inputEmailPassword.className = "input";
             inputEmailPassword.value = "";
-
         }
          if (ajx.readyState == 4 && ajx.status == 400) {
             let json = JSON.parse(ajx.responseText);
@@ -128,9 +126,7 @@ btnPswd.addEventListener("click", function() {
     document.querySelectorAll('.help').forEach(function(a){
         a.remove()
     })
-    notificationWrapper.innerHTML = "";
     const action = 'action=update_password&newPassword='+inputPswd.value+'&currentPswd='+inputPswdPassword.value+'&token='+token;
-
     const ajx = new XMLHttpRequest();
     ajx.onreadystatechange = function () {
         if (ajx.readyState == 4 && ajx.status == 200) {
@@ -198,7 +194,7 @@ btnEmailPref.addEventListener("click", function() {
 function createNotificationWrapper(responseText, type) {
     notificationWrapper = document.createElement('div');
     notificationWrapper.setAttribute('id', 'notification_wrapper');
-    notificationWrapper.setAttribute('style', 'position:fixed;top:0;width:100%;z-index:100;visibility:visible;animation:cssAnimation 0s 3s forwards;');
+    notificationWrapper.setAttribute('style', 'position:fixed;top:20px;width:100%;z-index:100;visibility:visible;animation:cssAnimation 0s 3s forwards;');
     notificationWrapper.innerHTML = '<div class="notification '+type+'"><div class="container"><p>'+responseText+'</p></div></div>';
     navbar.after(notificationWrapper);
 }

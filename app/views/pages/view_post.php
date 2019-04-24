@@ -27,7 +27,7 @@ $_SESSION['token'] = $token;
                     <div class="level-left">
                     <?php if (isset($_SESSION['username']) && isset($_SESSION['id_user'])) { ?>
                         <span class="icon has-text-danger">
-                            <i style="cursor: pointer" id="like_btn" id_post="<?= $post['id_post']; ?>" class="like_btn far fa-heart fa-lg"></i>
+                            <i style="cursor: pointer" id="like_btn" id_post="<?= $post['id_post']; ?>" class="like_btn <?= $user_liked ? 'fas fa-heart fa-lg' : 'far fa-heart fa-lg'?>"></i>
                         </span>
                     <?php } ?>
                     </div>

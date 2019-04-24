@@ -10,8 +10,8 @@ $_SESSION['token'] = $token;
 </section>
 
 <div class="columns">
-	<div class="column is-5"></div>
-	<div class="column is-2">
+	<div class="column"></div>
+	<div class="column is-one-quarter">
 			<div class="field">
 				<p class="control has-icons-left has-icons-right">
 					<input class="input" id="input_username" type="text" placeholder="Username">
@@ -58,7 +58,7 @@ $_SESSION['token'] = $token;
 				</div>
 			</div>
 	</div>
-	<div class="column is-5"></div>
+	<div class="column"></div>
 </div>
 <input type="hidden" name="token" id="token" value="<?= $token; ?>" />
 

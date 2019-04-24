@@ -13,6 +13,7 @@ for (var i = 0; i < likeBtnArray.length; i++) {
                 const showLikesArray = document.querySelector("[id_post_show_likes='"+idPost+"']");
                 let likesNb = parseInt(showLikesArray.innerText, 10);
                 showLikesArray.innerText = ajx.responseText === 'created' ? likesNb + 1 : likesNb - 1;
+                event.target.className = ajx.responseText === 'created' ? 'like_btn fas fa-heart fa-lg' : 'like_btn far fa-heart fa-lg';
             }
         };
         ajx.open("POST", "./app/controllers/PostsController.php", true);

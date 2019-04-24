@@ -1,21 +1,33 @@
+<?php if ($match): ?>
 <section class="section">
   <div class="container">
     <h1 class="title">Reset your password</h1>
   </div>
 </section>
-
-<?php if (isset($confirmation_msg)): ?>
-<div class="reset_wrapper">
-    <div class="form">
-        <input placeholder="new password" type="password" id="new_pswd" />
-        <input type="submit" value="Reset Password" id="reset_submit" />
-        <?php if (isset($errors) && $errors !== ''):
-            foreach ($errors as $error) {
-                echo $error;
-            } 
-        endif; ?>
+<div class="columns">
+    <div class="column"></div>
+    <div class="column is-one-quarter">
+        <div class="form">
+            <div class="field">
+				<p class="control has-icons-left">
+					<input class="input" id="input_new_pswd" type="password" placeholder="New password">
+					<span class="icon is-small is-left">
+						<i class="fas fa-lock"></i>
+					</span>
+				</p>
+			</div>
+            <div class="field is-grouped is-grouped-centered">
+				<p class="control">
+					<button id="button_reset_password" class="button is-info">
+						Reset password
+					</button>
+				</p>
+			</div>
+        </div>
     </div>
+    <div class="column"></div>
 </div>
+
 <?php endif; ?>
 
 <?php if (isset($error_msg)):
@@ -24,9 +36,9 @@ endif; ?>
 
 
 
-<div id="message" style="color:red;"></div>
+<!-- <div id="message" style="color:red;"></div> -->
 
-<a href="index.php?p=login">Login</a>
+<!-- <a href="index.php?p=login">Login</a> -->
 
 
 <script type="text/javascript">

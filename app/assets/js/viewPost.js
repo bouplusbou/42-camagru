@@ -1,10 +1,11 @@
 const commentBtn = document.getElementById('comment_btn');
 const commentInput = document.getElementById('comment_input');
 const commentCont = document.getElementById('comments_container');
+const likeBtn = document.getElementById('like_btn');
+
 const token = document.getElementById('token').value;
 
 commentBtn.addEventListener("click", function() {
-    // console.log(token);
     const action = 'action=create_comment&comment='+commentInput.value+'&id_post='+commentBtn.getAttribute('id_post')+'&id_post_creator='+commentBtn.getAttribute('id_post_creator')+'&token='+token;
 
     const ajx = new XMLHttpRequest();
@@ -23,9 +24,6 @@ commentBtn.addEventListener("click", function() {
     commentCont.appendChild(newDiv);
 });
 
-
-const likeBtn = document.getElementById('like_btn');
-
 likeBtn.addEventListener("click", function(event) {
     const idPost = event.target.getAttribute('id_post');
     const action = 'action=create_like&id_post='+idPost+'&token='+token;
@@ -37,6 +35,7 @@ likeBtn.addEventListener("click", function(event) {
             const showLikesArray = document.querySelector("[id_post_show_likes='"+idPost+"']");
             const likesNb = parseInt(showLikesArray.innerText, 10);
             showLikesArray.innerText = ajx.responseText === 'created' ? likesNb + 1 : likesNb - 1;
+            likeBtn.className = ajx.responseText === 'created' ? 'like_btn fas fa-heart fa-lg' : 'like_btn far fa-heart fa-lg';
         }
     };
     ajx.open("POST", "./app/controllers/PostsController.php", true);

@@ -71,9 +71,7 @@ function view_account() {
     if (isset($_SESSION['username'])) {
         require_once __DIR__.'/../views/pages/account.php';
     } else {
-        header('HTTP/1.0 403 Forbidden');
-        echo 'You are forbidden!';
-        exit;
+        require_once __DIR__.'/../views/pages/please_loggin.php';
     }
 }
 
@@ -81,9 +79,9 @@ function view_account() {
 function view_account_confirmation($email, $hash) {
     if (User::userConfirmed($email, $hash)) {
         $_SESSION['user_confirmed'] = '1';
-        $confirmation_msg = "Congratulations ! You've just confirmed your account. Enter your credentials to connect";
+        echo '<div class="notification is-success"><div class="container"><p>Congratulations 🎉  You\'ve just confirmed your account <br> <b>Enter your credentials to connect</b></p></div></div>';
     } else {
-        $error_msg = "Sorry but the link you used to confirmed your email is obsolete, please try to signup again.";
+        echo '<div class="notification is-dark"><div class="container"><p>⚠️ Sorry but the link you used to confirmed your email is obsolete</p></div></div>';
     }
     require_once './app/views/pages/login.php';
 }
@@ -91,9 +89,10 @@ function view_account_confirmation($email, $hash) {
 
 function view_reset_password_email($email, $hash) {
     if (User::emailHashMatch($email, $hash)) {
-        $confirmation_msg = "The link is OK";
+        $match = true;
     } else {
-        $error_msg = "Sorry but the link you used to confirmed your email is obsolete, please try to reset your password again.";
+        $match = false;
+        echo '<div class="notification is-dark"><div class="container"><p>⚠️ Sorry but the link you used to confirmed your email is obsolete</p></div></div>';
     }
     require_once __DIR__.'/../views/pages/reset_password.php';
 }
@@ -102,22 +101,22 @@ function view_reset_password_email($email, $hash) {
 
 
 
-/////////// Check errors ///////////
+// /////////// Check errors ///////////
 
 
 
 
 
-function reset_errors() {
-    $email = htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8');
-    $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
-    $password = $_POST['pswd'];
-    $errors = array();
-    if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/", $password)) {
-        $errors[] = 'Please enter a password at least 6 characters long containing at least one upper letter, one lower letter and one number.';
-    }
-    return false;
-}
+// function reset_errors() {
+//     $email = htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8');
+//     $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
+//     $password = $_POST['pswd'];
+//     $errors = array();
+//     if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/", $password)) {
+//         $errors[] = 'Please enter a password at least 6 characters long containing at least one upper letter, one lower letter and one number.';
+//     }
+//     return false;
+// }
 
 
 
@@ -190,7 +189,6 @@ function create_user() {
 
     ';
     mail($user_data[1], $subject, $message);
-    // header('Location: index.php?p=login');
 }
 
 function create_user_errors() {
@@ -347,26 +345,28 @@ if (isset($_POST['action']) && $_POST['action'] === "update_email_pref"
 }
 
 // Update password via reset password email
-if (isset($_POST['action']) && $_POST['action'] === 'reset_password_email' && isset($_POST['new_pswd']) && isset($_POST['email']) && isset($_POST['hash'])) {
+if (isset($_POST['action']) && $_POST['action'] === "reset_password" 
+    && isset($_POST['new_pswd']) 
+    && isset($_POST['email']) 
+    && isset($_POST['hash'])) {
     $new_pswd = $_POST['new_pswd'];
     $hashed_pswd = password_hash($new_pswd, PASSWORD_BCRYPT);
     $email = $_POST['email'];
     $hash = $_POST['hash'];
     if (User::emailHashMatch($email, $hash)) {
         if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/", $new_pswd)) {
-            echo 'Please enter a password at least 6 characters long containing at least one upper letter, one lower letter and one number.';
+            http_response_code(400);
+            echo 'Please enter a password at least 6 characters long containing at least one upper letter, one lower letter and one number';
         } else {
             User::updatePswd($email, $hashed_pswd);
-            echo "password changed";
-            echo '<a href="index.php?p=login">Login</a>';
-            exit;
+            echo 'Wooop ! Password changed 🎉 You wanna <a href="index.php?p=login">login</a> ?';
         }
     } else {
-        echo "email doesnt match";
+        http_response_code(401);
+        echo "⚠️ User is not authenticated";
     }
 
 }
-
 
 // send reset password
 if (isset($_POST['action']) && $_POST['action'] === 'reset_password_email' && isset($_POST['email'])) {

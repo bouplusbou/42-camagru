@@ -20,16 +20,18 @@ class Post {
         $req->execute(array( "id_post" => $id_post ));
     }
 
-    public static function getAllPosts() {
-        $req = Database::getPDO()->prepare('  SELECT posts.id_post, posts.photo_name, posts.id_user, likes_count, users.username
-                                FROM posts
-                                LEFT JOIN (
-                                    SELECT id_post, COUNT(*) AS likes_count
-                                    FROM likes
-                                    GROUP BY id_post
-                                ) likes_count ON likes_count.id_post = posts.id_post
-                                JOIN users ON posts.id_user = users.id_user');
-        $req->execute();                    
+    public static function getAllPosts($id_user) {
+        $req = Database::getPDO()->prepare('  SELECT posts.id_post, posts.photo_name, posts.id_user, likes_count, users.username, likes.id_user AS user_liked
+                                        FROM posts
+                                        LEFT JOIN (
+                                            SELECT id_post, COUNT(*) AS likes_count
+                                            FROM likes
+                                            GROUP BY id_post
+                                        ) likes_count ON likes_count.id_post = posts.id_post
+                                        JOIN users ON posts.id_user = users.id_user
+                                        LEFT JOIN likes ON posts.id_post = likes.id_post
+                                        AND likes.id_user = :id_user');
+        $req->execute(array( "id_user" => $id_user ));                  
         $data = $req->fetchAll(PDO::FETCH_CLASS, 'Post');
         return $data;
     }
@@ -82,6 +84,18 @@ class Post {
                                 JOIN users ON posts.id_user = users.id_user
                                 WHERE posts.id_post = :id_post');
         $req->execute(array( "id_post" => $id_post ));
+        $data = $req->fetch();
+        return $data;
+    }
+
+    public static function isLikedBy($id_post, $id_user) {
+        $req = Database::getPDO()->prepare('    SELECT id_user FROM likes
+                                                WHERE id_user = :id_user 
+                                                AND id_post = :id_post');
+        $req->execute(array( 
+            "id_post" => $id_post,
+            "id_user" => $id_user
+        ));
         $data = $req->fetch();
         return $data;
     }

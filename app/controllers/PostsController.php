@@ -11,12 +11,14 @@ require_once __DIR__.'/check_token.php';
 /////////// Views ///////////
 
 function view_galery() {
-    $posts = Post::getAllPosts();
+    $posts = Post::getAllPosts(isset($_SESSION['id_user']) ? $_SESSION['id_user'] : 0);
+    // var_dump($posts);
     require_once __DIR__.'/../views/pages/galery.php';
 }
 
 function view_one_post($id_post) {
     $post = Post::getOnePost($id_post);
+    $user_liked = Post::isLikedBy($id_post, $_SESSION['id_user']) == true;
     $comments = Comment::getComments($id_post);
     require_once __DIR__.'/../views/pages/view_post.php';
 }

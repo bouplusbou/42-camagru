@@ -46,15 +46,13 @@ resetBtn.addEventListener("click", function() {
         } else {
             window.alert("Please enter a proper email if you want to reset your password");
         }
-
     }
-  
 });
 
 function createNotificationWrapper(responseText, type) {
     notificationWrapper = document.createElement('div');
     notificationWrapper.setAttribute('id', 'notification_wrapper');
-    notificationWrapper.setAttribute('style', 'position:fixed;top:0;width:100%;z-index:100;visibility:visible;animation:cssAnimation 0s 3s forwards;');
+    notificationWrapper.setAttribute('style', 'position:fixed;top:20px;width:100%;z-index:100;visibility:visible;animation:cssAnimation 0s 3s forwards;');
     notificationWrapper.innerHTML = '<div class="notification '+type+'"><div class="container"><p>'+responseText+'</p></div></div>';
     navbar.after(notificationWrapper);
 }
