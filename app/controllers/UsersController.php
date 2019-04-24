@@ -9,44 +9,41 @@ require_once __DIR__.'/check_token.php';
 
 
 function view_signup() {
-    if (isset($_POST['submit']) && $_POST['submit'] === "create") {
-        if (check_token()) {
-            create_user();
-        }  else {
-            // echo $_SESSION['token'];
-            // echo $_POST['token'];
-            // echo "VERIF NOT OK";
-        }
-    }
     require_once './app/views/pages/signup.php';
 }
 
 
 function view_login() {
-    if (isset($_POST['submit']) && $_POST['submit'] === "login") {
-        if (check_token()) {
-            if ($user = User::userCredsOK($_POST)) {
-                if ($user['confirmed'] === '1') {
-                    $_SESSION['username'] = $user['username'];
-                    $_SESSION['id_user'] = $user['id_user'];
-                    $_SESSION['email'] = $user['email'];
-                    $_SESSION['email_when_comment'] = $user['email_when_comment'];
-                    header('Location: index.php');
-                } else {
-                    $error_msg = "Sorry but you have to confirm your email address first";
-                }
-            } else {
-                $error_msg = "Sorry wrong username or password";
-            }
-        } else {
-            // echo $_SESSION['token'];
-            // echo $_POST['token'];
-            // echo "VERIF NOT OK";
-        }
-    } 
     require_once './app/views/pages/login.php';
 }
 
+if (isset($_POST['action']) && $_POST['action'] === "login" 
+    && isset($_POST['username']) 
+    && isset($_POST['password']) 
+    && isset($_POST['token'])) {
+    session_start();
+    if (check_token()) {
+        if ($user = User::userCredsOK($_POST)) {
+            if ($user['confirmed'] === '1') {
+                $_SESSION['username'] = $user['username'];
+                $_SESSION['id_user'] = $user['id_user'];
+                $_SESSION['email'] = $user['email'];
+                $_SESSION['email_when_comment'] = $user['email_when_comment'];
+            } else {
+                http_response_code(400);
+                echo "Sorry but you have to confirm your ✉️ first";
+            }
+        } else {
+            http_response_code(400);
+            echo "Sorry wrong username or password";
+        }
+    } else {
+        http_response_code(401);
+        // echo $_SESSION['token'];
+        // echo $_POST['token'];
+        echo "⚠️ User is not authenticated";
+    }
+} 
 
 function view_logout() {
     session_start();
@@ -108,33 +105,7 @@ function view_reset_password_email($email, $hash) {
 /////////// Check errors ///////////
 
 
-function create_user_errors() {
-    $email = htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8');
-    $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
-    $password = $_POST['pswd'];
-    $errors = array();
-    if (!preg_match("/^[A-Za-z0-9]{3,10}$/", $username)) {
-        $errors[] = 'Please enter a username between 3 and 10 characters containing only numbers and letters.';
-    }
-    if (User::usernameExists($username)) {
-        $errors[] = 'This username or this email already exists.';
-    }
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = 'Please enter a proper email address.';
-    }
-    if (User::emailExists($email)) {
-        $errors[] = 'This username or this email already exists.';
-    }
-    if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/", $password)) {
-        $errors[] = 'Please enter a password at least 6 characters long containing at least one upper letter, one lower letter and one number.';
-    }
-    if (count($errors) !== 0) {
-        require_once './app/views/pages/signup.php';
-        return true;
-    } else {
-        return false;
-    }
-}
+
 
 
 function reset_errors() {
@@ -154,13 +125,50 @@ function reset_errors() {
 /////////// CRUD ///////////
 
 
-function create_user() {
-    if (create_user_errors()) {
-        exit;
+if (isset($_POST['action']) && $_POST['action'] === "signup" 
+    && isset($_POST['username']) 
+    && isset($_POST['email']) 
+    && isset($_POST['password']) 
+    && isset($_POST['token'])) {
+    session_start();
+    if (check_token()) {
+        create_user();
+    }  else {
+        http_response_code(401);
+        // echo $_SESSION['token'];
+        // echo $_POST['token'];
+        echo "⚠️ User is not authenticated";
     }
+}
+
+function create_user() {
     $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
     $email = htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8');
-    $pswd = password_hash($_POST['pswd'], PASSWORD_BCRYPT);
+    $password = $_POST['password'];
+    $errors = array();
+    if (!preg_match("/^[A-Za-z0-9]{3,10}$/", $username)) {
+        $errors['username_format'] = 'Please enter a username between 3 and 10 characters containing only numbers and letters.';
+    }
+    if (User::usernameExists($username)) {
+        $errors['username_or_email_exist'] = 'This username or this email already exists.';
+    }
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors['email_invalid'] = 'Please enter a proper email address.';
+    }
+    if (User::emailExists($email)) {
+        $errors['username_or_email_exist'] = 'This username or this email already exists.';
+    }
+    if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/", $password)) {
+        $errors['password_format'] = 'Please enter a password at least 6 characters long containing at least one upper letter, one lower letter and one number.';
+    }
+    if (count($errors) !== 0) {
+        http_response_code(400);
+        echo json_encode($errors);
+        exit;
+    }
+    
+
+    $pswd = password_hash($_POST['password'], PASSWORD_BCRYPT);
     $verif_hash = md5(uniqid(rand(), true));
     $creation_date = date("Y-m-d H:i:s");
     $user_data = array($username, $email, $pswd, $verif_hash, '0', '1', $creation_date);
@@ -184,7 +192,35 @@ function create_user() {
 
     ';
     mail($user_data[1], $subject, $message);
-    header('Location: index.php?p=login');
+    // header('Location: index.php?p=login');
+}
+
+function create_user_errors() {
+    $email = htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8');
+    $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
+    $password = $_POST['pswd'];
+    $errors = array();
+    if (!preg_match("/^[A-Za-z0-9]{3,10}$/", $username)) {
+        $errors['username_format'] = 'Please enter a username between 3 and 10 characters containing only numbers and letters.';
+    }
+    if (User::usernameExists($username)) {
+        $errors['username_exist'] = 'This username or this email already exists.';
+    }
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors['email_invalid'] = 'Please enter a proper email address.';
+    }
+    if (User::emailExists($email)) {
+        $errors['email_exist'] = 'This username or this email already exists.';
+    }
+    if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/", $password)) {
+        $errors['password_format'] = 'Please enter a password at least 6 characters long containing at least one upper letter, one lower letter and one number.';
+    }
+    if (count($errors) !== 0) {
+        require_once './app/views/pages/signup.php';
+        return true;
+    } else {
+        return false;
+    }
 }
 
 
@@ -197,9 +233,10 @@ if (isset($_POST['action']) && $_POST['action'] === 'update_email_pref') {
             $_SESSION['email_when_comment'] = $_POST['email_pref'];
             echo "email preferences updated";
         } else {
+            http_response_code(401);
             // echo $_SESSION['token'];
             // echo $_POST['token'];
-            // echo "VERIF NOT OK";
+            echo "⚠️ User is not authenticated";
         }
     }
 }
@@ -227,9 +264,10 @@ if (isset($_POST['action']) && $_POST['action'] === 'update_username') {
                 echo "password KO";
             }
         } else {
+            http_response_code(401);
             // echo $_SESSION['token'];
             // echo $_POST['token'];
-            // echo "VERIF NOT OK";
+            echo "⚠️ User is not authenticated";
         }
     }
 }
@@ -257,9 +295,10 @@ if (isset($_POST['action']) && $_POST['action'] === 'update_email') {
                 echo "password KO";
             }
         } else {
+            http_response_code(401);
             // echo $_SESSION['token'];
             // echo $_POST['token'];
-            // echo "VERIF NOT OK";
+            echo "⚠️ User is not authenticated";
         }
     }
 }
@@ -336,8 +375,9 @@ if (isset($_POST['action']) && $_POST['action'] === 'reset_password_email' && is
             mail($email, $subject, $message);
         }
     } else {
+        http_response_code(401);
         // echo $_SESSION['token'];
         // echo $_POST['token'];
-        // echo "VERIF NOT OK";
+        echo "⚠️ User is not authenticated";
     }
 }

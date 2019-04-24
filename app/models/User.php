@@ -20,12 +20,12 @@ class User {
 
     public static function userCredsOK($user_cred) {
         $username = $user_cred['username'];
-        $pswd = $user_cred['pswd'];
+        $password = $user_cred['password'];
         $req = Database::getPDO()->prepare("  SELECT pswd FROM users 
                                 WHERE username = :username");
         $req->execute( array('username' => $username) );
-        $hashed_pswd = $req->fetch();
-        if (password_verify($pswd, $hashed_pswd['pswd'])) {
+        $hashed_password = $req->fetch();
+        if (password_verify($password, $hashed_password['pswd'])) {
             $req = Database::getPDO()->prepare("  SELECT id_user, username, confirmed, email, email_when_comment FROM users 
                                     WHERE username = :username");
             $req->execute( array('username' => $username) );

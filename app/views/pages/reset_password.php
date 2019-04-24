@@ -4,6 +4,9 @@
   </div>
 </section>
 
+<div id="notification_wrapper">
+</div>
+
 <?php if (isset($confirmation_msg)): ?>
 <div class="reset_wrapper">
     <div class="form">

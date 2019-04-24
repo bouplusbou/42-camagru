@@ -132,9 +132,10 @@ if (isset($_POST['action']) && $_POST['action'] === 'webcam_img_montage') {
             // print_r($_POST);;
         }
     } else {
+        http_response_code(401);
         // echo $_SESSION['token'];
         // echo $_POST['token'];
-        // echo "VERIF NOT OK";
+        echo "⚠️ User is not authenticated";
     }
 
 }
@@ -173,9 +174,10 @@ if (isset($_POST['action']) && $_POST['action'] === 'upload_img_montage') {
             // print_r($_POST);;
         }
     } else {
+        http_response_code(401);
         // echo $_SESSION['token'];
         // echo $_POST['token'];
-        // echo "VERIF NOT OK";
+        echo "⚠️ User is not authenticated";
     }
 }
 
@@ -197,9 +199,10 @@ if (isset($_POST['action']) && $_POST['action'] === 'create_like') {
             }
         }
     }  else {
+        http_response_code(401);
         // echo $_SESSION['token'];
         // echo $_POST['token'];
-        // echo "VERIF NOT OK";
+        echo "⚠️ User is not authenticated";
     }
 }
 
@@ -215,9 +218,10 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_post') {
             }
         }
     }  else {
+        http_response_code(401);
         // echo $_SESSION['token'];
         // echo $_POST['token'];
-        // echo "VERIF NOT OK";
+        echo "⚠️ User is not authenticated";
     }
 }
 
@@ -245,9 +249,10 @@ if (isset($_POST['action']) && $_POST['action'] === 'create_comment') {
             mail($creator['email'], $subject, $message);
         }
     } else {
+        http_response_code(401);
         // echo $_SESSION['token'];
         // echo $_POST['token'];
-        // echo "VERIF NOT OK";
+        echo "⚠️ User is not authenticated";
     }
 }
 
