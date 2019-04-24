@@ -1,35 +1,29 @@
 
 const btnLogin = document.getElementById('button_login');
+const resetBtn = document.getElementById('reset_pswd');
+const navbar = document.getElementById('navbar');
 const token = document.getElementById('token').value;
 
 btnLogin.addEventListener("click", function() {
-    const notificationWrapper = document.getElementById('notification_wrapper');
-    const inputUsername = document.getElementById('input_username').value;
-    const inputPassword = document.getElementById('input_password').value;
-    const action = 'action=login&username='+inputUsername+'&password='+inputPassword+'&token='+token;
+    const inputUsername = document.getElementById('input_username');
+    const inputPassword = document.getElementById('input_password');
+    const action = 'action=login&username='+inputUsername.value+'&password='+inputPassword.value+'&token='+token;
     const ajx = new XMLHttpRequest();
     ajx.onreadystatechange = function () {
         if (ajx.readyState == 4 && ajx.status == 200) {
-            console.log('coucou');
             window.location = 'index.php';
         }
         if (ajx.readyState == 4 && ajx.status == 400) {
-            notificationWrapper.innerHTML = '<div class="notification is-danger"><div class="container"><p>'+ajx.responseText+'</p></div></div>';
+            createNotificationWrapper(ajx.responseText, 'is-danger');
         }
         if (ajx.readyState == 4 && ajx.status == 401) {
-            notificationWrapper.innerHTML = '<div class="notification is-dark"><div class="container"><p>'+ajx.responseText+'</p></div></div>';
+            createNotificationWrapper(ajx.responseText, 'is-dark');
         }
     };
     ajx.open("POST", "./app/controllers/UsersController.php", true);
     ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     ajx.send(action);
 });
-
-
-
-
-
-const resetBtn = document.getElementById('reset_pswd');
 
 resetBtn.addEventListener("click", function() {
     let email = window.prompt("Please enter your email if you want to reset your password");
@@ -56,3 +50,11 @@ resetBtn.addEventListener("click", function() {
     }
   
 });
+
+function createNotificationWrapper(responseText, type) {
+    notificationWrapper = document.createElement('div');
+    notificationWrapper.setAttribute('id', 'notification_wrapper');
+    notificationWrapper.setAttribute('style', 'position:fixed;top:0;width:100%;z-index:100;visibility:visible;animation:cssAnimation 0s 3s forwards;');
+    notificationWrapper.innerHTML = '<div class="notification '+type+'"><div class="container"><p>'+responseText+'</p></div></div>';
+    navbar.after(notificationWrapper);
+}

@@ -3,9 +3,6 @@ $token = bin2hex(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
 $_SESSION['token'] = $token;
 ?>
 
-<div id="notification_wrapper">
-</div>
-
 <section class="section">
   <div class="container">
     <h1 class="title">Signup</h1>
@@ -23,7 +20,7 @@ $_SESSION['token'] = $token;
 					</span>
 				</p>
 			</div>
-            <div class="field">
+      <div class="field">
 				<p class="control has-icons-left has-icons-right">
 					<input class="input" id="input_email" type="email" placeholder="Email">
 					<span class="icon is-small is-left">

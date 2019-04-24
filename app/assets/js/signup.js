@@ -1,20 +1,17 @@
 
 const btnCreateAccount = document.getElementById('button_create_account');
+const inputUsername = document.getElementById('input_username');
+const inputEmail = document.getElementById('input_email');
+const inputPassword = document.getElementById('input_password');
+const navbar = document.getElementById('navbar');
 const token = document.getElementById('token').value;
 
 btnCreateAccount.addEventListener("click", function() {
     document.querySelectorAll('.help').forEach(function(a){
         a.remove()
     })
-    const notificationWrapper = document.getElementById('notification_wrapper');
-    notificationWrapper.innerHTML = "";
-    const inputUsername = document.getElementById('input_username');
-    const inputEmail = document.getElementById('input_email');
-    const inputPassword = document.getElementById('input_password');
-    const inputUsernameValue = inputUsername.value;
-    const inputEmailValue = inputEmail.value;
-    const inputPasswordValue = inputPassword.value;
-    const action = 'action=signup&username='+inputUsernameValue+'&email='+inputEmailValue+'&password='+inputPasswordValue+'&token='+token;
+
+    const action = 'action=signup&username='+inputUsername.value+'&email='+inputEmail.value+'&password='+inputPassword.value+'&token='+token;
     const ajx = new XMLHttpRequest();
     ajx.onreadystatechange = function () {
         if (ajx.readyState == 4 && ajx.status == 200) {
@@ -22,7 +19,6 @@ btnCreateAccount.addEventListener("click", function() {
         }
         if (ajx.readyState == 4 && ajx.status == 400) {
             let json = JSON.parse(ajx.responseText);
-            console.log(json);
             if (json.username_format) {
                 inputUsername.className = "input is-danger";
                 let helper = document.createElement('p');
@@ -53,14 +49,22 @@ btnCreateAccount.addEventListener("click", function() {
             if (json.username_or_email_exist) {
                 inputUsername.className = "input is-danger";
                 inputEmail.className = "input is-danger";
-                notificationWrapper.innerHTML = '<div class="notification is-danger"><div class="container"><p>'+json.username_or_email_exist+'</p></div></div>';
+                createNotificationWrapper(json.username_or_email_exist, 'is-danger');
             }
         }
         if (ajx.readyState == 4 && ajx.status == 401) {
-            notificationWrapper.innerHTML = '<div class="notification is-dark"><div class="container"><p>'+ajx.responseText+'</p></div></div>';
+            createNotificationWrapper(ajx.responseText, 'is-dark');
         }
     };
     ajx.open("POST", "./app/controllers/UsersController.php", true);
     ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     ajx.send(action);
 });
+
+function createNotificationWrapper(responseText, type) {
+    notificationWrapper = document.createElement('div');
+    notificationWrapper.setAttribute('id', 'notification_wrapper');
+    notificationWrapper.setAttribute('style', 'position:fixed;top:0;width:100%;z-index:100;visibility:visible;animation:cssAnimation 0s 3s forwards;');
+    notificationWrapper.innerHTML = '<div class="notification '+type+'"><div class="container"><p>'+responseText+'</p></div></div>';
+    navbar.after(notificationWrapper);
+}

@@ -5,8 +5,6 @@ if (isset($confirmation_msg)) {
 	echo $confirmation_msg;
 }
 ?>
-<div id="notification_wrapper">
-</div>
 
 <section class="section">
   <div class="container">
@@ -14,10 +12,9 @@ if (isset($confirmation_msg)) {
   </div>
 </section>
 
-
 <div class="columns">
-	<div class="column is-5"></div>
-	<div class="column is-2">
+	<div class="column"></div>
+	<div class="column is-one-quarter">
 			<div class="field">
 				<p class="control has-icons-left has-icons-right">
 					<input class="input" id="input_username" type="text" placeholder="Username">
@@ -41,22 +38,22 @@ if (isset($confirmation_msg)) {
 					</button>
 				</p>
 			</div>
+			<div class="level">
+				<div class="level-item has-text-centered">
+					<a id="reset_pswd" href="">Forgot your password ?</a>
+				</div>
+			</div>
 			<section class="section">
 			  <div class="container">
 			  </div>
 			</section>
 			<div class="level">
 				<div class="level-item has-text-centered">
-					<a id="reset_pswd" href="">Forgot your password ?</a>
-				</div>
-			</div>
-			<div class="level">
-				<div class="level-item has-text-centered">
 					<p>Not a member yet ?   <a href="index.php?p=signup">Signup</a></p>
 				</div>
 			</div>
 	</div>
-	<div class="column is-5"></div>
+	<div class="column"></div>
 </div>
 <input type="hidden" name="token" id="token" value="<?= $token; ?>" />
 

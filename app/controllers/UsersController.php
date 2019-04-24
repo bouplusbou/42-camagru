@@ -35,7 +35,7 @@ if (isset($_POST['action']) && $_POST['action'] === "login"
             }
         } else {
             http_response_code(400);
-            echo "Sorry wrong username or password";
+            echo "Sorry wrong username or password 🤷‍♀️";
         }
     } else {
         http_response_code(401);
@@ -133,7 +133,7 @@ if (isset($_POST['action']) && $_POST['action'] === "signup"
     session_start();
     if (check_token()) {
         create_user();
-    }  else {
+    } else {
         http_response_code(401);
         // echo $_SESSION['token'];
         // echo $_POST['token'];
@@ -147,27 +147,25 @@ function create_user() {
     $password = $_POST['password'];
     $errors = array();
     if (!preg_match("/^[A-Za-z0-9]{3,10}$/", $username)) {
-        $errors['username_format'] = 'Please enter a username between 3 and 10 characters containing only numbers and letters.';
+        $errors['username_format'] = 'Please enter a username between 3 and 10 characters containing only numbers and letters';
     }
     if (User::usernameExists($username)) {
-        $errors['username_or_email_exist'] = 'This username or this email already exists.';
+        $errors['username_or_email_exist'] = 'This username or this email already exists 👀';
     }
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors['email_invalid'] = 'Please enter a proper email address.';
+        $errors['email_invalid'] = 'Please enter a proper email address';
     }
     if (User::emailExists($email)) {
-        $errors['username_or_email_exist'] = 'This username or this email already exists.';
+        $errors['username_or_email_exist'] = 'This username or this email already exists 👀';
     }
     if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/", $password)) {
-        $errors['password_format'] = 'Please enter a password at least 6 characters long containing at least one upper letter, one lower letter and one number.';
+        $errors['password_format'] = 'Please enter a password at least 6 characters long containing at least one upper letter, one lower letter and one number';
     }
     if (count($errors) !== 0) {
         http_response_code(400);
         echo json_encode($errors);
         exit;
     }
-    
-
     $pswd = password_hash($_POST['password'], PASSWORD_BCRYPT);
     $verif_hash = md5(uniqid(rand(), true));
     $creation_date = date("Y-m-d H:i:s");
@@ -224,110 +222,127 @@ function create_user_errors() {
 }
 
 
-// Update email preferences
-if (isset($_POST['action']) && $_POST['action'] === 'update_email_pref') {
-    session_start();
-    if (isset($_POST['email_pref']) && isset($_SESSION['email_when_comment']) && isset($_SESSION['username'])) {
-        if (check_token()) {
-            User::updateEmailPref($_SESSION['username'], $_POST['email_pref']);
-            $_SESSION['email_when_comment'] = $_POST['email_pref'];
-            echo "email preferences updated";
-        } else {
-            http_response_code(401);
-            // echo $_SESSION['token'];
-            // echo $_POST['token'];
-            echo "⚠️ User is not authenticated";
-        }
-    }
-}
+
 
 // Update username
-if (isset($_POST['action']) && $_POST['action'] === 'update_username') {
+if (isset($_POST['action']) && $_POST['action'] === "update_username" 
+    && isset($_POST['newUsername']) 
+    && isset($_POST['pswd']) 
+    && isset($_POST['token'])) {
     session_start();
-    if (isset($_POST['newUsername']) && isset($_POST['pswd']) && isset($_SESSION['username'])) {
-        if (check_token()) {
-            $pswd = $_POST['pswd'];
-            $new_username = $_POST['newUsername'];
-            $current_username = $_SESSION['username'];
-            if (User::pswdUsernameMatch($pswd, $current_username)) {
-                if (!preg_match("/^[A-Za-z0-9]{3,10}$/", $new_username)) {
-                    echo 'Please enter a username between 3 and 10 characters containing only numbers and letters.';
-                    exit;
-                } else if (User::usernameExists($new_username)) {
-                    echo 'This username is already taken.';
-                } else {
-                    User::updateUsername($current_username, $new_username);
-                    $_SESSION['username'] = $new_username;
-                    echo "Username changed";
-                }
-            } else {
-                echo "password KO";
-            }
-        } else {
-            http_response_code(401);
-            // echo $_SESSION['token'];
-            // echo $_POST['token'];
-            echo "⚠️ User is not authenticated";
+    $errors = array();
+    if (check_token()) {
+        $pswd = $_POST['pswd'];
+        $new_username = htmlspecialchars($_POST['newUsername'], ENT_QUOTES, 'UTF-8');
+        $current_username = $_SESSION['username'];
+        if (!User::pswdUsernameMatch($pswd, $current_username)) {
+            $errors['wrong_password'] = "Wrong password";
         }
+        if (!preg_match("/^[A-Za-z0-9]{3,10}$/", $new_username)) {
+            $errors['username_format'] = 'Please enter a username between 3 and 10 characters containing only numbers and letters';
+        } else if (User::usernameExists($new_username)) {
+            $errors['username_taken'] = 'This username is already taken';
+        } 
+        if (count($errors) !== 0) {
+            http_response_code(400);
+            echo json_encode($errors);
+            exit;
+        }
+        User::updateUsername($current_username, $new_username);
+        $_SESSION['username'] = $new_username;
+        http_response_code(200);
+        echo "Username changed ✌️";
+    } else {
+        http_response_code(401);
+        // echo $_SESSION['token'];
+        // echo $_POST['token'];
+        echo "⚠️ User is not authenticated";
     }
 }
 
 // Update email
-if (isset($_POST['action']) && $_POST['action'] === 'update_email') {
+if (isset($_POST['action']) && $_POST['action'] === "update_email" 
+    && isset($_POST['newEmail']) 
+    && isset($_POST['pswd']) 
+    && isset($_POST['token'])) {
     session_start();
-    if (isset($_POST['newEmail']) && isset($_POST['pswd']) && isset($_SESSION['username'])) {
-        if (check_token()) {
-            $pswd = $_POST['pswd'];
-            $new_email = $_POST['newEmail'];
-            $username = $_SESSION['username'];
-            if (User::pswdUsernameMatch($pswd, $username)) {
-                if (!filter_var($new_email, FILTER_VALIDATE_EMAIL)) {
-                    echo 'Please enter a proper email address.';
-                }
-                else if (User::emailExists($new_email)) {
-                    echo 'This email already exists.';
-                } else {
-                    User::updateEmail($username, $new_email);
-                    $_SESSION['email'] = $new_email;
-                    echo "Email changed";
-                }
-            } else {
-                echo "password KO";
-            }
-        } else {
-            http_response_code(401);
-            // echo $_SESSION['token'];
-            // echo $_POST['token'];
-            echo "⚠️ User is not authenticated";
+    $errors = array();
+    if (check_token()) {
+        $pswd = $_POST['pswd'];
+        $new_email = htmlspecialchars($_POST['newEmail'], ENT_QUOTES, 'UTF-8');
+        $username = $_SESSION['username'];
+        if (!User::pswdUsernameMatch($pswd, $username)) {
+            $errors['wrong_password'] = "Wrong password";
         }
+        if (!filter_var($new_email, FILTER_VALIDATE_EMAIL)) {
+            $errors['email_format'] = 'Please enter a proper email address.';
+        } else if (User::emailExists($new_email)) {
+            $errors['email_exist'] = 'This email already exists.';
+        }
+        if (count($errors) !== 0) {
+            http_response_code(400);
+            echo json_encode($errors);
+            exit;
+        }
+        User::updateEmail($username, $new_email);
+        $_SESSION['email'] = $new_email;
+        echo "Email changed ✉️";
+    } else {
+        http_response_code(401);
+        // echo $_SESSION['token'];
+        // echo $_POST['token'];
+        echo "⚠️ User is not authenticated";
     }
 }
 
 // Update password via account
-if (isset($_POST['action']) && $_POST['action'] === 'update_password') {
+if (isset($_POST['action']) && $_POST['action'] === "update_password" 
+    && isset($_POST['newPassword']) 
+    && isset($_POST['currentPswd']) 
+    && isset($_POST['token'])) {
     session_start();
-    if (isset($_POST['newPassword']) && isset($_POST['currentPswd']) && isset($_SESSION['email']) && isset($_SESSION['username'])) {
-        if (check_token()) {
-            $current_pswd = $_POST['currentPswd'];
-            $new_pswd = $_POST['newPassword'];
-            $hashed_pswd = password_hash($new_pswd, PASSWORD_BCRYPT);
-            $email = $_SESSION['email'];
-            $username = $_SESSION['username'];
-            if (User::pswdUsernameMatch($current_pswd, $username)) {
-                if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/", $new_pswd)) {
-                    echo 'Please enter a password at least 6 characters long containing at least one upper letter, one lower letter and one number.';
-                } else {
-                    User::updatePswd($email, $hashed_pswd);
-                    echo "Password changed";
-                }
-            } else {
-                echo "password KO";
-            }
-        } else {
-            echo $_SESSION['token'];
-            echo $_POST['token'];
-            echo "VERIF NOT OK";
+    $errors = array();
+    if (check_token()) {
+        $current_pswd = $_POST['currentPswd'];
+        $new_pswd = $_POST['newPassword'];
+        $hashed_pswd = password_hash($new_pswd, PASSWORD_BCRYPT);
+        $email = $_SESSION['email'];
+        $username = $_SESSION['username'];
+        if (!User::pswdUsernameMatch($current_pswd, $username)) {
+            $errors['wrong_password'] = "Wrong password";
         }
+        if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/", $new_pswd)) {
+            $errors['password_format'] = 'Please enter a password at least 6 characters long containing at least one upper letter, one lower letter and one number.';
+        }
+        if (count($errors) !== 0) {
+            http_response_code(400);
+            echo json_encode($errors);
+            exit;
+        }
+        User::updatePswd($email, $hashed_pswd);
+        echo "Password changed 😎";
+    } else {
+        http_response_code(401);
+        // echo $_SESSION['token'];
+        // echo $_POST['token'];
+        echo "⚠️ User is not authenticated";
+    }
+}
+
+// Update email preferences
+if (isset($_POST['action']) && $_POST['action'] === "update_email_pref" 
+    && isset($_POST['email_pref']) 
+    && isset($_POST['token'])) {
+    session_start();
+    if (check_token()) {
+        User::updateEmailPref($_SESSION['username'], $_POST['email_pref']);
+        $_SESSION['email_when_comment'] = $_POST['email_pref'];
+        echo "Email preferences updated ❤️";
+    } else {
+        http_response_code(401);
+        // echo $_SESSION['token'];
+        // echo $_POST['token'];
+        echo "⚠️ User is not authenticated";
     }
 }
 

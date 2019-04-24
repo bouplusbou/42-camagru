@@ -3,9 +3,6 @@ $token = bin2hex(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
 $_SESSION['token'] = $token;
 ?>
 
-<div id="notification_wrapper">
-</div>
-
 <section class="section">
   <div class="container">
     <h1 class="title">New post</h1>
