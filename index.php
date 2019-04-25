@@ -40,6 +40,8 @@ if (isset($_GET['p'])) {
         view_post_webcam();
     else if ($_GET['p'] === 'post_upload')
         view_post_upload();
+    else if ($_GET['p'] === 'upload_img')
+        upload_img();
     else if ($_GET['p'] === 'account')
         view_account();
     else if ($_GET['p'] === 'my_posts')

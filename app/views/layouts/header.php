@@ -16,7 +16,6 @@ session_start();
     <title><?= $title ?></title>
 </head>
 <body>
-<!-- <div id="notification_wrapper" style="position:fixed;width:100%;z-index:100;"> -->
 </div>
     <nav id="navbar" class="navbar" role="navigation">
         <div class="navbar-brand">

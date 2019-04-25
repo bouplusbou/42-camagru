@@ -1,38 +1,22 @@
-body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
-.video_wrap {
+#video {
     position: relative;
-}
-video {
-    width: 640px;
-    height: 480px;
-    background-color: black;
+    width: 100%;
+
+    /* flip the webcam */
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
 }
 
-#sticker_container {
-    border: solid 1px lightgray;
-    border-radius: 15px;
-    padding: 20px;
-    width: 760px;
-    height: 100px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.sticker > img {
+    height: 50px;
 }
-#sticker_container > div {
-    margin: 0 10px;
-}
-#sticker_container > div > img {
-    height: 80px;
-}
+
 #overlay {
     position: absolute;
     top: 0;
     left: 0;
 }
+
 .dragme {
     position:relative;
     width: 300px;
@@ -40,17 +24,6 @@ video {
     cursor: move;
 }
 
-#thumbnails_container {
-    border: solid 1px lightgray;
-    border-radius: 15px;
-	height: 600px;
-	width: 200px;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-}
-#thumbnails_container > img {
-	width: 80%;
-	margin: 10px 0;
+.thumbnail {
+    margin: 10px 0;
 }
