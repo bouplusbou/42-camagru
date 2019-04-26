@@ -13,6 +13,9 @@ commentBtn.addEventListener("click", function() {
         if (ajx.readyState == 4 && ajx.status == 200) {
             // document.getElementById("message").innerHTML = ajx.responseText;
         }
+        if (ajx.readyState == 4 && ajx.status == 401) {
+            createNotificationWrapper(ajx.responseText, 'is-dark');
+        }
     };
     ajx.open("POST", "./app/controllers/PostsController.php", true);
     ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -42,3 +45,15 @@ likeBtn.addEventListener("click", function(event) {
     ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     ajx.send(action);
 });
+
+
+
+/////////////////// NOTIFICATIONS ///////////////////
+
+function createNotificationWrapper(responseText, type) {
+    notificationWrapper = document.createElement('div');
+    notificationWrapper.setAttribute('id', 'notification_wrapper');
+    notificationWrapper.setAttribute('style', 'position:fixed;top:20px;width:100%;z-index:100;visibility:visible;animation:cssAnimation 0s 3s forwards;');
+    notificationWrapper.innerHTML = '<div class="notification '+type+'"><div class="container"><p>'+responseText+'</p></div></div>';
+    navbar.after(notificationWrapper);
+}

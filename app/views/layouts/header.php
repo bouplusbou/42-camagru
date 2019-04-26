@@ -22,37 +22,56 @@ session_start();
             <a href="index.php?p=galery" class="navbar-item">
                 <img src="/app/assets/images/site/logo_black.png" alt="" >    
             </a>
+            <a id="burger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+              <span aria-hidden="true"></span>
+            </a>
         </div>
-
-        <div class="navbar-menu">
+        <div class="navbar-item">
+        <?php if (isset($_SESSION['username'])) { ?>
+            <?php if ($title !== 'Logout') { ?>
+            <a class="button" href="index.php?p=logout">Logout</a>
+            <?php } ?>
+        <?php } ?>  
+        </div>
+        <div id="menu" class="navbar-menu">
             <div class="navbar-start">
             <?php if ($title !== 'Galery') { ?>
                 <div class="navbar-item">
                     <a class="button" href="index.php?p=galery">Galery</a>
                 </div>
             <?php } ?>
+            <?php if ($title !== 'New post') { ?>
                 <div class="navbar-item">
                     <a class="button is-primary" href="index.php?p=post_webcam">New post</a>
                 </div>
+            <?php } ?>
             </div>
-        </div>
-
-        <div class="navbar-end">
-            <div class="navbar-item">
-                <div class="buttons">
-                    <?php if (isset($_SESSION['username'])) { ?>
-                        <a class="button" href="index.php?p=my_posts">My posts</a>
-                        <a class="button" href="index.php?p=account">Account</a>
-                        <a class="button" href="index.php?p=logout">Logout</a>
-                    <?php } else { ?>
-                        <a class="button" href="index.php?p=login">Login</a>
-                        <a class="button" href="index.php?p=signup">Signup</a>
-                    <?php } ?>  
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <?php if (isset($_SESSION['username'])) { ?>
+                            <?php if ($title !== 'My posts') { ?>
+                            <a class="button" href="index.php?p=my_posts">My posts</a>
+                            <?php } ?>
+                            <?php if ($title !== 'Account') { ?>
+                            <a class="button" href="index.php?p=account">Account</a>
+                            <?php } ?>
+                        <?php } else { ?>
+                            <?php if ($title !== 'Login') { ?>
+                            <a class="button" href="index.php?p=login">Login</a>
+                            <?php } ?>
+                            <?php if ($title !== 'Signup') { ?>
+                            <a class="button" href="index.php?p=signup">Signup</a>
+                            <?php } ?>
+                        <?php } ?>  
+                    </div>
                 </div>
             </div>
         </div>
     </nav>
-
+    <script type="text/javascript" src="./app/assets/js/header.js"></script>
 
 
 

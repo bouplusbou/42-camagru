@@ -14,6 +14,18 @@ class Post {
         ));
     }
 
+    public static function deleteLikesFromPost($id_post) {
+        $req = Database::getPDO()->prepare("  DELETE FROM likes 
+                                WHERE id_post = :id_post");
+        $req->execute(array( "id_post" => $id_post ));
+    }
+
+    public static function deleteCommentsFromPost($id_post) {
+        $req = Database::getPDO()->prepare("  DELETE FROM comments 
+                                WHERE id_post = :id_post");
+        $req->execute(array( "id_post" => $id_post ));
+    }
+
     public static function deletePost($id_post, $id_user) {
         $req = Database::getPDO()->prepare("  DELETE FROM posts 
                                 WHERE id_post = :id_post");
@@ -32,6 +44,42 @@ class Post {
                                         LEFT JOIN likes ON posts.id_post = likes.id_post
                                         AND likes.id_user = :id_user');
         $req->execute(array( "id_user" => $id_user ));                  
+        $data = $req->fetchAll(PDO::FETCH_CLASS, 'Post');
+        return $data;
+    }
+
+    public static function getLastFivePosts($id_user) {
+        $req = Database::getPDO()->prepare('  SELECT posts.id_post, posts.photo_name, posts.id_user, likes_count, users.username, likes.id_user AS user_liked
+                                        FROM posts
+                                        LEFT JOIN (
+                                            SELECT id_post, COUNT(*) AS likes_count
+                                            FROM likes
+                                            GROUP BY id_post
+                                        ) likes_count ON likes_count.id_post = posts.id_post
+                                        JOIN users ON posts.id_user = users.id_user
+                                        LEFT JOIN likes ON posts.id_post = likes.id_post
+                                        AND likes.id_user = :id_user
+                                        ORDER BY posts.id_post DESC LIMIT 5');
+        $req->execute(array( "id_user" => $id_user ));                  
+        $data = $req->fetchAll(PDO::FETCH_CLASS, 'Post');
+        return $data;
+    }
+
+    public static function getNextLastFivePosts($id_user, $offset) {
+        $req = Database::getPDO()->prepare('  SELECT posts.id_post, posts.photo_name, posts.id_user, likes_count, users.username, likes.id_user AS user_liked
+                                        FROM posts
+                                        LEFT JOIN (
+                                            SELECT id_post, COUNT(*) AS likes_count
+                                            FROM likes
+                                            GROUP BY id_post
+                                        ) likes_count ON likes_count.id_post = posts.id_post
+                                        JOIN users ON posts.id_user = users.id_user
+                                        LEFT JOIN likes ON posts.id_post = likes.id_post
+                                        AND likes.id_user = :id_user
+                                        ORDER BY posts.id_post DESC LIMIT :offset_posts , 5');
+        $req->bindValue("id_user", $id_user, PDO::PARAM_INT);
+        $req->bindValue("offset_posts", intval($offset), PDO::PARAM_INT);
+        $req->execute();              
         $data = $req->fetchAll(PDO::FETCH_CLASS, 'Post');
         return $data;
     }

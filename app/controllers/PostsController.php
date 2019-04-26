@@ -12,9 +12,8 @@ require_once __DIR__.'/check_token.php';
 /////////// Views ///////////
 
 function view_galery() {
-    $posts = Post::getAllPosts(isset($_SESSION['id_user']) ? $_SESSION['id_user'] : 0);
-    $posts = array_reverse($posts);
-    // var_dump($posts);
+    $posts = Post::getLastFivePosts(isset($_SESSION['id_user']) ? $_SESSION['id_user'] : 0);
+    $offset = 0;
     require_once __DIR__.'/../views/pages/galery.php';
 }
 
@@ -56,6 +55,17 @@ function view_post_webcam() {
 
 /////////// CRUD ///////////
 
+if (isset($_POST['action']) && $_POST['action'] === "get_next_five_posts" 
+    && isset($_POST['offset']) 
+    && isset($_POST['token'])) {
+    session_start();
+    $id_user = isset($_SESSION['id_user']) ? $_SESSION['id_user'] : 0;
+    $posts = Post::getNextLastFivePosts($id_user, $_POST['offset']);
+    $posts['connected'] = isset($_SESSION['username']) ? true : false;
+    // var_dump($posts);
+    echo json_encode($posts);
+}
+
 if (isset($_POST['action']) && $_POST['action'] === 'create_like') {
     session_start();
     if (check_token()) {
@@ -70,8 +80,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'create_like') {
         }
     }  else {
         http_response_code(401);
-        // echo $_SESSION['token'];
-        // echo $_POST['token'];
         echo "⚠️ User is not authenticated";
     }
 }
@@ -81,16 +89,17 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_post') {
     if (check_token()) {
         if (isset($_POST['id_post']) && isset($_SESSION['id_user'])) {
             if (Post::getIdUserFromIdPost($_POST['id_post'])['id_user'] === $_SESSION['id_user']) {
+                Post::deleteLikesFromPost($_POST['id_post']);
+                Post::deleteCommentsFromPost($_POST['id_post']);
                 Post::deletePost($_POST['id_post'], $_SESSION['id_user']);
-                echo "post deleted";
+                echo "Post deleted. Bye bye 👋";
             } else {
-                echo "user has no right to delete";
+                http_response_code(400);
+                echo "⚠️ You have no right to delete that";
             }
         }
     }  else {
         http_response_code(401);
-        // echo $_SESSION['token'];
-        // echo $_POST['token'];
         echo "⚠️ User is not authenticated";
     }
 }
@@ -120,8 +129,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'create_comment') {
         }
     } else {
         http_response_code(401);
-        // echo $_SESSION['token'];
-        // echo $_POST['token'];
         echo "⚠️ User is not authenticated";
     }
 }
@@ -195,15 +202,10 @@ if (isset($_POST['action']) && $_POST['action'] === 'webcam_img_montage') {
         }
     } else {
         http_response_code(401);
-        // echo $_SESSION['token'];
-        // echo $_POST['token'];
         echo "⚠️ User is not authenticated";
     }
 
 }
-
-
-
 
 function view_post_upload() {
     if (isset($_SESSION['username'])) {
@@ -282,8 +284,6 @@ if (isset($_POST['action']) && $_POST['action'] === 'upload_img_montage') {
         }
     } else {
         http_response_code(401);
-        // echo $_SESSION['token'];
-        // echo $_POST['token'];
         echo "⚠️ User is not authenticated";
     }
 }

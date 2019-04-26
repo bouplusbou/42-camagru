@@ -30,17 +30,6 @@
 
 <?php endif; ?>
 
-<?php if (isset($error_msg)):
-	echo $error_msg;
-endif; ?>
-
-
-
-<!-- <div id="message" style="color:red;"></div> -->
-
-<!-- <a href="index.php?p=login">Login</a> -->
-
-
 <script type="text/javascript">
 <?php if (isset($_GET['email']) && isset($_GET['hash'])) { ?>
     let email = "<?= $_GET['email']; ?>";

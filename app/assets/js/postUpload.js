@@ -79,11 +79,14 @@ window.onload = function() {
 /////////////////// MONTAGE ///////////////////
 
 // display filename
-const file = document.getElementById('file');
-file.onchange = function(){
-    if(file.files.length > 0)
+const img = document.getElementById('img');
+const filename = document.getElementById('filename');
+const btnUpload = document.getElementById('button_upload');
+img.onchange = function(){
+    if(img.files.length > 0)
     {
-        filename.innerHTML = file.files[0].name;
+        filename.innerHTML = img.files[0].name;
+        btnUpload.className = 'button is-info';
     }
 };
 
@@ -157,3 +160,32 @@ function createNotificationWrapper(responseText, type) {
     notificationWrapper.innerHTML = '<div class="notification '+type+'"><div class="container"><p>'+responseText+'</p></div></div>';
     navbar.after(notificationWrapper);
 }
+
+
+/////////////////// DELETE POST ///////////////////
+
+document.addEventListener('click', function (event) {
+	if (event.target.matches('.delete')) {
+        if (window.confirm('Are you sure you want to delete this post ?')) {
+            const idPost = event.target.getAttribute('id_post');
+            const action = 'action=delete_post&id_post='+idPost+'&token='+token;
+            const ajx = new XMLHttpRequest();
+            ajx.onreadystatechange = function () {
+                if (ajx.readyState == 4 && ajx.status == 200) {
+                    createNotificationWrapper(ajx.responseText, 'is-success');
+                    const divToDelete = document.querySelector("[div_post='"+idPost+"']");
+                    divToDelete.remove();
+                }
+                if (ajx.readyState == 4 && ajx.status == 400) {
+                    createNotificationWrapper(ajx.responseText, 'is-danger');
+                }
+                if (ajx.readyState == 4 && ajx.status == 401) {
+                    createNotificationWrapper(ajx.responseText, 'is-dark');
+                }
+            };
+            ajx.open("POST", "./app/controllers/PostsController.php", true);
+            ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            ajx.send(action);
+        }
+	}
+}, false);
