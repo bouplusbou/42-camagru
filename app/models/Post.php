@@ -49,34 +49,62 @@ class Post {
     }
 
     public static function getLastFivePosts($id_user) {
-        $req = Database::getPDO()->prepare('  SELECT posts.id_post, posts.photo_name, posts.id_user, likes_count, users.username, likes.id_user AS user_liked
-                                        FROM posts
-                                        LEFT JOIN (
-                                            SELECT id_post, COUNT(*) AS likes_count
-                                            FROM likes
-                                            GROUP BY id_post
-                                        ) likes_count ON likes_count.id_post = posts.id_post
-                                        JOIN users ON posts.id_user = users.id_user
-                                        LEFT JOIN likes ON posts.id_post = likes.id_post
-                                        AND likes.id_user = :id_user
-                                        ORDER BY posts.id_post DESC LIMIT 5');
+        $req = Database::getPDO()->prepare('SELECT posts.id_post, 
+        posts.photo_name,
+        posts.id_user,
+        likes_count,
+        users.username,
+        likes.id_user AS user_liked,
+        (SELECT comments.comment
+        FROM comments
+        WHERE comments.id_post = posts.id_post
+        ORDER BY comments.id_post DESC
+        LIMIT 1) AS comment,
+        (SELECT users.username FROM users 
+        JOIN comments ON comments.id_user = users.id_user 
+        WHERE comments.id_post = posts.id_post
+        ORDER BY comments.id_post DESC LIMIT 1) AS commenter
+        FROM posts
+        LEFT JOIN (
+            SELECT id_post, COUNT(*) AS likes_count
+            FROM likes
+            GROUP BY id_post
+        ) likes_count ON likes_count.id_post = posts.id_post
+        JOIN users ON posts.id_user = users.id_user
+        LEFT JOIN likes ON posts.id_post = likes.id_post
+        AND likes.id_user = :id_user
+        ORDER BY posts.id_post DESC LIMIT 5');
         $req->execute(array( "id_user" => $id_user ));                  
         $data = $req->fetchAll(PDO::FETCH_CLASS, 'Post');
         return $data;
     }
 
     public static function getNextLastFivePosts($id_user, $offset) {
-        $req = Database::getPDO()->prepare('  SELECT posts.id_post, posts.photo_name, posts.id_user, likes_count, users.username, likes.id_user AS user_liked
-                                        FROM posts
-                                        LEFT JOIN (
-                                            SELECT id_post, COUNT(*) AS likes_count
-                                            FROM likes
-                                            GROUP BY id_post
-                                        ) likes_count ON likes_count.id_post = posts.id_post
-                                        JOIN users ON posts.id_user = users.id_user
-                                        LEFT JOIN likes ON posts.id_post = likes.id_post
-                                        AND likes.id_user = :id_user
-                                        ORDER BY posts.id_post DESC LIMIT :offset_posts , 5');
+        $req = Database::getPDO()->prepare('SELECT posts.id_post,
+        posts.photo_name,
+        posts.id_user,
+        likes_count,
+        users.username,
+        likes.id_user AS user_liked,
+        (SELECT comments.comment
+        FROM comments
+        WHERE comments.id_post = posts.id_post
+        ORDER BY comments.id_post DESC
+        LIMIT 1) AS comment,
+        (SELECT users.username FROM users 
+        JOIN comments ON comments.id_user = users.id_user 
+        WHERE comments.id_post = posts.id_post
+        ORDER BY comments.id_post DESC LIMIT 1) AS commenter
+        FROM posts
+        LEFT JOIN (
+            SELECT id_post, COUNT(*) AS likes_count
+            FROM likes
+            GROUP BY id_post
+        ) likes_count ON likes_count.id_post = posts.id_post
+        JOIN users ON posts.id_user = users.id_user
+        LEFT JOIN likes ON posts.id_post = likes.id_post
+        AND likes.id_user = :id_user
+        ORDER BY posts.id_post DESC LIMIT :offset_posts , 5');
         $req->bindValue("id_user", $id_user, PDO::PARAM_INT);
         $req->bindValue("offset_posts", intval($offset), PDO::PARAM_INT);
         $req->execute();              

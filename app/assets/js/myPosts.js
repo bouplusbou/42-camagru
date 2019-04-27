@@ -2,26 +2,26 @@ const token = document.getElementById('token').value;
 
 document.addEventListener('click', function (event) {
 
-	if (event.target.matches('.like_btn')) {
-        const idPost = event.target.getAttribute('id_post');
-        const action = 'action=create_like&id_post='+idPost+'&token='+token;
-        console.log(idPost);
+	// if (event.target.matches('.like_btn')) {
+    //     const idPost = event.target.getAttribute('id_post');
+    //     const action = 'action=create_like&id_post='+idPost+'&token='+token;
+    //     // console.log(idPost);
     
-        const ajx = new XMLHttpRequest();
-        ajx.onreadystatechange = function () {
-            if (ajx.readyState == 4 && ajx.status == 200) {
-                const showLikesArray = document.querySelector("[id_post_show_likes='"+idPost+"']");
-                let likesNb = parseInt(showLikesArray.innerText, 10);
-                showLikesArray.innerText = ajx.responseText === 'created' ? likesNb + 1 : likesNb - 1;
-            }
-            if (ajx.readyState == 4 && ajx.status == 401) {
-                createNotificationWrapper(ajx.responseText, 'is-dark');
-            }
-        };
-        ajx.open("POST", "./app/controllers/PostsController.php", true);
-        ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        ajx.send(action);
-	}
+    //     const ajx = new XMLHttpRequest();
+    //     ajx.onreadystatechange = function () {
+    //         if (ajx.readyState == 4 && ajx.status == 200) {
+    //             const showLikesArray = document.querySelector("[id_post_show_likes='"+idPost+"']");
+    //             let likesNb = parseInt(showLikesArray.innerText, 10);
+    //             showLikesArray.innerText = ajx.responseText === 'created' ? likesNb + 1 : likesNb - 1;
+    //         }
+    //         if (ajx.readyState == 4 && ajx.status == 401) {
+    //             createNotificationWrapper(ajx.responseText, 'is-dark');
+    //         }
+    //     };
+    //     ajx.open("POST", "./app/controllers/PostsController.php", true);
+    //     ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    //     ajx.send(action);
+	// }
 
 	if (event.target.matches('.delete_btn')) {
         if (window.confirm('Are you sure you want to delete this post ?')) {

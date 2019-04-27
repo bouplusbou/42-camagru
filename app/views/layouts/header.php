@@ -15,42 +15,38 @@ session_start();
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <title><?= $title ?></title>
 </head>
-<body>
+<body class="site">
 </div>
     <nav id="navbar" class="navbar" role="navigation">
         <div class="navbar-brand">
             <a href="index.php?p=galery" class="navbar-item">
                 <img src="/app/assets/images/site/logo_black.png" alt="" >    
             </a>
+            <div class="navbar-item">
+            <?php if (isset($_SESSION['username'])) { ?>
+                <?php if ($title !== 'Logout') { ?>
+                <a class="button is-danger is-outlined" href="index.php?p=logout">Logout</a>
+                <?php } ?>
+            <?php } ?>  
+            </div>
             <a id="burger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
               <span aria-hidden="true"></span>
               <span aria-hidden="true"></span>
               <span aria-hidden="true"></span>
             </a>
         </div>
-        <div class="navbar-item">
-        <?php if (isset($_SESSION['username'])) { ?>
-            <?php if ($title !== 'Logout') { ?>
-            <a class="button" href="index.php?p=logout">Logout</a>
-            <?php } ?>
-        <?php } ?>  
-        </div>
         <div id="menu" class="navbar-menu">
-            <div class="navbar-start">
-            <?php if ($title !== 'Galery') { ?>
-                <div class="navbar-item">
-                    <a class="button" href="index.php?p=galery">Galery</a>
-                </div>
-            <?php } ?>
-            <?php if ($title !== 'New post') { ?>
-                <div class="navbar-item">
-                    <a class="button is-primary" href="index.php?p=post_webcam">New post</a>
-                </div>
-            <?php } ?>
-            </div>
             <div class="navbar-end">
                 <div class="navbar-item">
                     <div class="buttons">
+                        <?php if ($title !== 'New post') { ?>
+                            <div class="navbar-item">
+                                <a class="button is-primary" href="index.php?p=post_webcam">New post</a>
+                            </div>
+                        <?php } ?>
+                        <?php if ($title !== 'Galery') { ?>
+                            <a class="button" href="index.php?p=galery">Galery</a>
+                        <?php } ?>
                         <?php if (isset($_SESSION['username'])) { ?>
                             <?php if ($title !== 'My posts') { ?>
                             <a class="button" href="index.php?p=my_posts">My posts</a>
@@ -72,6 +68,7 @@ session_start();
         </div>
     </nav>
     <script type="text/javascript" src="./app/assets/js/header.js"></script>
+    <main class="site-content">
 
 
 

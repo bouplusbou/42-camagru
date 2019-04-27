@@ -12,7 +12,7 @@ $_SESSION['token'] = $token;
 <div class="columns">
     <div class="column"></div>
     <div class="column is-one-quarter">
-        <h3 class="title is-size-4"><span class="tag is-info is-large">Update your username</span></h3>
+        <h3 class="title is-size-4"><span class="tag is-link is-large">Update your username</span></h3>
         <p>Current username: <b id="display_current_username"><?= $_SESSION['username'] ?></b></p>
         <div class="field">
 			<p class="control has-icons-left has-icons-right">
@@ -32,7 +32,7 @@ $_SESSION['token'] = $token;
 		</div>
         <div class="field is-grouped is-right is-grouped-centered">
 			<p class="control">
-				<button id="btn_username" class="button is-info">
+				<button id="btn_username" class="button is-info is-outlined">
                     Change username
 				</button>
 			</p>
@@ -61,7 +61,7 @@ $_SESSION['token'] = $token;
 		</div>
         <div class="field is-grouped is-right is-grouped-centered">
 			<p class="control">
-				<button id="btn_email" class="button is-warning">
+				<button id="btn_email" class="button is-info is-outlined">
 					Change email
 				</button>
 			</p>
@@ -89,7 +89,7 @@ $_SESSION['token'] = $token;
 		</div>
         <div class="field is-grouped is-right is-grouped-centered">
 			<p class="control">
-				<button id="btn_pswd" class="button is-danger">
+				<button id="btn_pswd" class="button is-info is-outlined">
 					Change password
 				</button>
 			</p>
@@ -113,7 +113,7 @@ $_SESSION['token'] = $token;
         <br>
         <div class="field is-grouped is-right is-grouped-centered">
 			<p class="control">
-				<button id="btn_email_pref" class="button is-success">
+				<button id="btn_email_pref" class="button is-info is-outlined">
 					Change email preferences
 				</button>
 			</p>

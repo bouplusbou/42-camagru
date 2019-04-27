@@ -2,6 +2,6 @@ body {
     background-color: #FAFAFA;
 }
 
-.level-item {
-    flex-shrink: 1;
+#comment_icon {
+    margin: 0 10px 0 0;
 }

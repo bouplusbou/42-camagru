@@ -9,7 +9,9 @@ $_SESSION['token'] = $token;
   </div>
 </section>
 
-<div class="container">
+<div class="columns">
+<div class="column"></div>
+<div class="column is-half">
     <div class="card">
         <header class="card-header">
             <p class="card-header-title">
@@ -25,6 +27,9 @@ $_SESSION['token'] = $token;
             <div id="comments_container" class="content">
                 <div class="level">
                     <div class="level-left">
+                        <span id="comment_icon" class="icon has-text-info">
+                            <a><i style="cursor: pointer" class="far fa-comment fa-lg"></i></a>
+                        </span>
                     <?php if (isset($_SESSION['username']) && isset($_SESSION['id_user'])) { ?>
                         <span class="icon has-text-danger">
                             <i style="cursor: pointer" id="like_btn" id_post="<?= $post['id_post']; ?>" class="like_btn <?= $user_liked ? 'fas fa-heart fa-lg' : 'far fa-heart fa-lg'?>"></i>
@@ -41,12 +46,8 @@ $_SESSION['token'] = $token;
                     </div>
                 </div>
                 <?php foreach ($comments as $comment): ?>
-                <div class="level">
-                    <div class="level-left">
-                        <div class="level-item">
-                            <p><b><?= $comment['username']; ?></b>   <?= $comment['comment']; ?></p>
-                        </div>
-                    </div>
+                <div class="level-left">
+                    <p><b><?= $comment['username']; ?></b>   <?= $comment['comment']; ?></p>
                 </div>
                 <?php endforeach; ?>
             </div>
@@ -54,19 +55,22 @@ $_SESSION['token'] = $token;
         <footer class="card-footer">
             <nav class="card-footer-item">
                 <div class="field has-addons">
-                  <p class="control is-expanded">
-                    <input id="comment_input" class="input" type="text" placeholder="Add a new comment">
-                  </p>
-                  <p class="control">
-                    <a class="button is-info" id="comment_btn" id_post="<?= $post['id_post']; ?>" id_post_creator="<?= $post['id_user']; ?>">
-                      Comment
+                <p class="control">
+                    <input id="comment_input" class="input is-small" type="text" placeholder="Add a new comment">
+                </p>
+                <p class="control">
+                    <a class="button is-info is-small" id="comment_btn" id_post="<?= $post['id_post']; ?>">
+                    Comment
                     </a>
-                  </p>
+                </p>
                 </div>
             </nav>
         </footer>
     </div>
 </div>
+<div class="column"></div>
+</div>
+
 
 
 <input type="hidden" name="token" id="token" value="<?= $token; ?>" />

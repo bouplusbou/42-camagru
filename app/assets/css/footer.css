@@ -1,7 +1,13 @@
-#footer {
-    clear: both;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    padding: 20px 0;
+.site {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+  
+.site-content {
+  flex: 1;
+}
+
+.footer {
+    border-top: solid 0.5px lightgray;
 }

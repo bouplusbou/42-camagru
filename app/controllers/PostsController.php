@@ -62,7 +62,6 @@ if (isset($_POST['action']) && $_POST['action'] === "get_next_five_posts"
     $id_user = isset($_SESSION['id_user']) ? $_SESSION['id_user'] : 0;
     $posts = Post::getNextLastFivePosts($id_user, $_POST['offset']);
     $posts['connected'] = isset($_SESSION['username']) ? true : false;
-    // var_dump($posts);
     echo json_encode($posts);
 }
 
@@ -104,28 +103,46 @@ if (isset($_POST['action']) && $_POST['action'] === 'delete_post') {
     }
 }
 
-if (isset($_POST['action']) && $_POST['action'] === 'create_comment') {
+if (isset($_POST['action']) && $_POST['action'] === "create_comment" 
+    && isset($_POST['comment']) 
+    && isset($_POST['id_post']) 
+    && isset($_POST['token'])) {
     session_start();
     if (check_token()) {
-        $creation_date = date("Y-m-d H:i:s");
-        $comment_data = array(htmlspecialchars($_POST['comment'], ENT_QUOTES, 'UTF-8'), $creation_date, $_SESSION['id_user'], $_POST['id_post']);
-        $comment = Comment::insertComment($comment_data);
-        $creator = User::sendEmailWhenComment($_POST['id_post_creator']);
-        if ($creator["email_when_comment"] === '1') {
-            $subject = 'New comment on your post !';
-            $message = '
-            
-            Hi'.$creator['username'].', 
-    
-            Someone just add a new comment on your post!
-            You can check it out following this link right there :
-    
-            http://127.0.0.1:8080/index.php?p=view_post&id='.$_POST['id_post'].'
-            
-            ';
-            // echo $creator['email'];
-            // echo 'http://127.0.0.1:8080/index.php?p=view_post&id='.$_POST['id_post'];
-            mail($creator['email'], $subject, $message);
+        if ($id_creator = Post::getIdUserFromIdPost($_POST['id_post'])) {
+            if (empty($_POST['comment'])) {
+                http_response_code(400);
+                echo 'Put something in you comment or it won\'t work ! 🌈';
+                exit;
+            }
+            if (!preg_match("/^.{1,140}$/", $_POST['comment'])) {
+                http_response_code(400);
+                echo 'No more than <b>140 characters</b> please 🙏';
+                exit;
+            }
+            $creation_date = date("Y-m-d H:i:s");
+            $comment_data = array(htmlspecialchars($_POST['comment'], ENT_QUOTES, 'UTF-8'), $creation_date, $_SESSION['id_user'], $_POST['id_post']);
+            $comment = Comment::insertComment($comment_data);
+            $creator = User::sendEmailWhenComment($id_creator["id_user"]);
+            if ($creator["email_when_comment"] === '1') {
+                $subject = 'New comment on your post !';
+                $message = '
+                
+                Hi'.$creator['username'].', 
+        
+                Someone just add a new comment on your post!
+                You can check it out following this link right there :
+        
+                http://127.0.0.1:8080/index.php?p=view_post&id='.$_POST['id_post'].'
+                
+                ';
+                // echo $creator['email'];
+                // echo 'http://127.0.0.1:8080/index.php?p=view_post&id='.$_POST['id_post'];
+                mail($creator['email'], $subject, $message);
+            }
+        } else {
+            http_response_code(400);
+            echo "⚠️ This post does not exist";
         }
     } else {
         http_response_code(401);
