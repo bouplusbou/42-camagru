@@ -7,6 +7,10 @@ require_once __DIR__.'/check_token.php';
 
 /////////// Views ///////////
 
+function please_login() {
+    require_once __DIR__.'/../views/pages/please_login.php';
+}
+
 
 function view_signup() {
     require_once './app/views/pages/signup.php';
@@ -39,8 +43,6 @@ if (isset($_POST['action']) && $_POST['action'] === "login"
         }
     } else {
         http_response_code(401);
-        // echo $_SESSION['token'];
-        // echo $_POST['token'];
         echo "⚠️ User is not authenticated";
     }
 } 
@@ -71,7 +73,7 @@ function view_account() {
     if (isset($_SESSION['username'])) {
         require_once __DIR__.'/../views/pages/account.php';
     } else {
-        require_once __DIR__.'/../views/pages/please_loggin.php';
+        require_once __DIR__.'/../views/pages/please_login.php';
     }
 }
 
@@ -100,27 +102,6 @@ function view_reset_password_email($email, $hash) {
 
 
 
-
-// /////////// Check errors ///////////
-
-
-
-
-
-// function reset_errors() {
-//     $email = htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8');
-//     $username = htmlspecialchars($_POST['username'], ENT_QUOTES, 'UTF-8');
-//     $password = $_POST['pswd'];
-//     $errors = array();
-//     if (!preg_match("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/", $password)) {
-//         $errors[] = 'Please enter a password at least 6 characters long containing at least one upper letter, one lower letter and one number.';
-//     }
-//     return false;
-// }
-
-
-
-
 /////////// CRUD ///////////
 
 
@@ -134,8 +115,6 @@ if (isset($_POST['action']) && $_POST['action'] === "signup"
         create_user();
     } else {
         http_response_code(401);
-        // echo $_SESSION['token'];
-        // echo $_POST['token'];
         echo "⚠️ User is not authenticated";
     }
 }
@@ -252,8 +231,6 @@ if (isset($_POST['action']) && $_POST['action'] === "update_username"
         echo "Username changed ✌️";
     } else {
         http_response_code(401);
-        // echo $_SESSION['token'];
-        // echo $_POST['token'];
         echo "⚠️ User is not authenticated";
     }
 }
@@ -287,8 +264,6 @@ if (isset($_POST['action']) && $_POST['action'] === "update_email"
         echo "Email changed ✉️";
     } else {
         http_response_code(401);
-        // echo $_SESSION['token'];
-        // echo $_POST['token'];
         echo "⚠️ User is not authenticated";
     }
 }
@@ -321,8 +296,6 @@ if (isset($_POST['action']) && $_POST['action'] === "update_password"
         echo "Password changed 😎";
     } else {
         http_response_code(401);
-        // echo $_SESSION['token'];
-        // echo $_POST['token'];
         echo "⚠️ User is not authenticated";
     }
 }
@@ -338,8 +311,6 @@ if (isset($_POST['action']) && $_POST['action'] === "update_email_pref"
         echo "Email preferences updated ❤️";
     } else {
         http_response_code(401);
-        // echo $_SESSION['token'];
-        // echo $_POST['token'];
         echo "⚠️ User is not authenticated";
     }
 }
@@ -369,10 +340,17 @@ if (isset($_POST['action']) && $_POST['action'] === "reset_password"
 }
 
 // send reset password
-if (isset($_POST['action']) && $_POST['action'] === 'reset_password_email' && isset($_POST['email'])) {
+if (isset($_POST['action']) && $_POST['action'] === "reset_password_email" 
+    && isset($_POST['email']) 
+    && isset($_POST['token'])) {
     session_start();
     if (check_token()) {
         $email = $_POST['email'];
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            http_response_code(400);
+            echo 'Please enter a proper email address';
+            exit;
+        }
         if ($verif_hash = User::emailExists($email)) {
             $subject = 'Reset your password';
             $message = '
@@ -380,19 +358,17 @@ if (isset($_POST['action']) && $_POST['action'] === 'reset_password_email' && is
             Hi,
             We\'ve just received  a request to reset your password. If you didn\'t make the request, just ignore this email.
             Otherwise you can reset your password using this link:
-    
+        
             http://127.0.0.1:8080/index.php?p=reset_password_email&email='.$email.'&hash='.$verif_hash['verif_hash'].'
         
             Thanks,
             The Camagru Team
             ';
-            echo 'http://127.0.0.1:8080/index.php?p=reset_password_email&email='.$email.'&hash='.$verif_hash['verif_hash'];
+            // echo 'http://127.0.0.1:8080/index.php?p=reset_password_email&email='.$email.'&hash='.$verif_hash['verif_hash'];
             mail($email, $subject, $message);
         }
     } else {
         http_response_code(401);
-        // echo $_SESSION['token'];
-        // echo $_POST['token'];
         echo "⚠️ User is not authenticated";
     }
 }

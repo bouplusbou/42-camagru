@@ -46,6 +46,12 @@ likeBtn.addEventListener("click", function(event) {
             showLikesArray.innerText = ajx.responseText === 'created' ? likesNb + 1 : likesNb - 1;
             likeBtn.className = ajx.responseText === 'created' ? 'like_btn fas fa-heart fa-lg' : 'like_btn far fa-heart fa-lg';
         }
+        if (ajx.readyState == 4 && ajx.status == 400) {
+            createNotificationWrapper(ajx.responseText, 'is-danger');
+        }
+        if (ajx.readyState == 4 && ajx.status == 401) {
+            createNotificationWrapper(ajx.responseText, 'is-dark');
+        }
     };
     ajx.open("POST", "./app/controllers/PostsController.php", true);
     ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");

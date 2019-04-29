@@ -41,18 +41,6 @@ $_SESSION['token'] = $token;
   </form>
 </div>
 
-
-
-
-<!-- <input type="hidden" name="img_width" value="" />
-<script type="text/javascript">
-    let currentUsername = "<?= $_SESSION['username']; ?>";
-</script>
-<script type="text/javascript" src="./app/assets/js/viewPost.js"></script> -->
-
-
-
-
 <section class="section">
   <div class="container">
     <div class="tile is-ancestor">

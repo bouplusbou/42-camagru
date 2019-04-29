@@ -98,8 +98,8 @@ async function init() {
         const stream = await navigator.mediaDevices.getUserMedia(constraints);
         handleSuccess(stream);
     } catch (e) {
-        createNotificationWrapper('Video cannot load !', 'is-dark');
-        // errorMsgElement.innerHTML = `navigator.getUserMedia error:${e.toString()}`;
+        createNotificationWrapper('⚠️ Video cannot load !', 'is-dark');
+        window.location = 'index.php?p=post_upload';
     }
 }
 
@@ -130,43 +130,47 @@ btnSnap.addEventListener("click", function() {
     
     // Save and send to the server
     const img_data = canvas.toDataURL();
-    
+  
     // get the coord to position the src + the path
-    const placement_x = parseInt(selected_sticker.style.left.length != 0 ? selected_sticker.style.left : 0, 10)-20;
-    const placement_y = parseInt(selected_sticker.style.top.length != 0 ? selected_sticker.style.top : 0, 10)-30;
-    
-    // send to the server using AJAX
-    const action = "action=webcam_img_montage&placement_x="+placement_x+"&placement_y="+placement_y+"&img_data="+img_data+"&sticker_src="+selected_sticker_src+'&token='+token;
-    
-    const ajx = new XMLHttpRequest();
-    ajx.onreadystatechange = function () {
-        if (ajx.readyState == 4 && ajx.status == 200) {
-            // document.getElementById("message").innerHTML = ajx.responseText;
-            // console.log(ajx.responseText);
-            getThumbnails();
-        }
-        if (ajx.readyState == 4 && ajx.status == 401) {
-            createNotificationWrapper(ajx.responseText, 'is-dark');
-        }
-    };
-    ajx.open("POST", "./app/controllers/PostsController.php", true);
-    ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    ajx.send(action);
+    if (typeof selected_sticker !== 'undefined') {
+        const placement_x = parseInt(selected_sticker.style.left.length != 0 ? selected_sticker.style.left : 0, 10)-20;
+        const placement_y = parseInt(selected_sticker.style.top.length != 0 ? selected_sticker.style.top : 0, 10)-30;
+        
+        // send to the server using AJAX
+        const action = "action=webcam_img_montage&placement_x="+placement_x+"&placement_y="+placement_y+"&img_data="+img_data+"&sticker_src="+selected_sticker_src+'&token='+token;
+        
+        const ajx = new XMLHttpRequest();
+        ajx.onreadystatechange = function () {
+            if (ajx.readyState == 4 && ajx.status == 200) {
+                getThumbnails();
+            }
+            if (ajx.readyState == 4 && ajx.status == 400) {
+                createNotificationWrapper(ajx.responseText, 'is-danger');
+            }
+            if (ajx.readyState == 4 && ajx.status == 401) {
+                createNotificationWrapper(ajx.responseText, 'is-dark');
+            }
+        };
+        ajx.open("POST", "./app/controllers/PostsController.php", true);
+        ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        ajx.send(action);
+    }
 });
 
 
 
 /////////////////// THUMBNAILS ///////////////////
 
-
 function getThumbnails () {
-    const action = "action=get_thumbnails";
-    
+    const action = 'action=get_thumbnails'+'&token='+token;
     const ajx = new XMLHttpRequest();
     ajx.onreadystatechange = function () {
         if (ajx.readyState == 4 && ajx.status == 200) {
-            let thumbName = ajx.responseText;
-            addLastThumbnail(thumbName);
+            let json = JSON.parse(ajx.responseText);
+            addLastThumbnail(json['photo_name'], json['id_post']);
+        }
+        if (ajx.readyState == 4 && ajx.status == 401) {
+            createNotificationWrapper(ajx.responseText, 'is-dark');
         }
     }
     ajx.open('POST', './app/controllers/PostsController.php', true);
@@ -174,17 +178,24 @@ function getThumbnails () {
     ajx.send(action);
 }
 
-function addLastThumbnail (thumbName) {
+function addLastThumbnail (thumbName, idPost) {
     if (document.querySelectorAll('.thumbnail').length >= 6) {
         const thumbnailsContainer = document.getElementById('thumbnails_container');
         thumbnailsContainer.lastElementChild.remove();
     }
+    let newDiv = document.createElement('div');
+    newDiv.className = 'thumbnail_container';
+    newDiv.setAttribute('div_post', idPost);
+    
+    let thumbNOverlay = `  <img class="thumbnail" src="./app/assets/images/post_img/`+thumbName+`" alt="">
+    <div class="thumbnail_overlay">
+    <a id_post="`+idPost+`" class="delete"></a>
+    </div>`;
+    
+    newDiv.innerHTML = thumbNOverlay;
+    
     const lastPostsTitle = document.getElementById('last_posts_title');
-    let lastThumb = document.createElement('img');
-    let src = "./app/assets/images/post_img/"+thumbName;
-    lastThumb.setAttribute('src', src);
-    lastThumb.className = 'thumbnail';
-    lastPostsTitle.after(lastThumb);
+    lastPostsTitle.after(newDiv);
 }   
 
 

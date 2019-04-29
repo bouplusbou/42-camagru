@@ -1,9 +1,6 @@
 <?php 
 $token = bin2hex(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
 $_SESSION['token'] = $token;
-if (isset($confirmation_msg)) {
-	echo $confirmation_msg;
-}
 ?>
 
 <section class="section">

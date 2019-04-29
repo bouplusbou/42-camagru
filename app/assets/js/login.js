@@ -38,6 +38,12 @@ resetBtn.addEventListener("click", function() {
                 if (ajx.readyState == 4 && ajx.status == 200) {
                     document.getElementById("message").innerHTML = ajx.responseText;
                 }
+                if (ajx.readyState == 4 && ajx.status == 400) {
+                    createNotificationWrapper(ajx.responseText, 'is-danger');
+                }
+                if (ajx.readyState == 4 && ajx.status == 401) {
+                    createNotificationWrapper(ajx.responseText, 'is-dark');
+                }
             };
             ajx.open("POST", "./app/controllers/UsersController.php", true);
             ajx.setRequestHeader("Content-type", "application/x-www-form-urlencoded");

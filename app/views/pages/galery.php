@@ -30,16 +30,18 @@ $_SESSION['token'] = $token;
                         <div class="content">
                             <div class="level">
                                 <div class="level-left">
-                                    <span class="icon has-text-info comment_icon" style="margin: 0 10px 0 0;">
-                                        <a href="<?= 'index.php?p=view_post&id='.$post->id_post; ?>">
-                                            <i style="cursor: pointer" class="far fa-comment fa-lg"></i>
-                                        </a>
-                                    </span>
-                                <?php if (isset($_SESSION['username']) && isset($_SESSION['id_user'])) { ?>
-                                    <span class="icon has-text-danger">
-                                        <i style="cursor: pointer" id_post="<?= $post->id_post; ?>" class="like_btn <?= $post->user_liked ? 'fas fa-heart fa-lg' : 'far fa-heart fa-lg'?>"></i>
-                                    </span>
-                                <?php } ?>
+                                    <div class="level-item">
+                                        <span class="icon has-text-info comment_icon" style="margin: 0 10px 0 0;">
+                                            <a href="<?= 'index.php?p=view_post&id='.$post->id_post; ?>">
+                                                <i style="cursor: pointer" class="far fa-comment fa-lg"></i>
+                                            </a>
+                                        </span>
+                                        <?php if (isset($_SESSION['username']) && isset($_SESSION['id_user'])) { ?>
+                                        <span class="icon has-text-danger">
+                                            <i style="cursor: pointer" id_post="<?= $post->id_post; ?>" class="like_btn <?= $post->user_liked ? 'fas fa-heart fa-lg' : 'far fa-heart fa-lg'?>"></i>
+                                        </span>
+                                        <?php } ?>
+                                    </div>
                                 </div>
                                 <div class="level-right">
                                     <div class="level-item">
@@ -70,7 +72,7 @@ $_SESSION['token'] = $token;
                                     <input input_id_post="<?= $post->id_post; ?>" class="input is-small comment_input" type="text" placeholder="Add a new comment">
                                 </p>
                                 <p class="control">
-                                    <a class="button is-info is-outlined is-small comment_btn" id_post="<?= $post->id_post; ?>" id_post_creator="<?= $post->id_user; ?>">
+                                    <a class="button is-info is-outlined is-small comment_btn" id_post="<?= $post->id_post; ?>">
                                     Comment
                                     </a>
                                 </p>

@@ -16,10 +16,10 @@ if (isset($_GET['p']) && in_array($_GET['p'], $valid_titles)) {
         'reset_password_email' => 'Reset my email'
     );
     $title = $titles[$_GET['p']];
-    $css = './app/assets/css/'.$_GET['p'].'.css';
+    $css = '/app/assets/css/'.$_GET['p'].'.css';
 } else {
     $title = 'Galery';
-    $css = './app/assets/css/galery.css';
+    $css = '/app/assets/css/galery.css';
 }
 
 require_once __DIR__.'/app/views/layouts/header.php';
@@ -28,7 +28,9 @@ require_once __DIR__.'/app/controllers/PostsController.php';
 require_once __DIR__.'/app/controllers/UsersController.php';
 
 if (isset($_GET['p'])) {
-    if ($_GET['p'] === 'signup')
+    if ($_GET['p'] === 'please_login')
+        please_login();
+    else if ($_GET['p'] === 'signup')
         view_signup();
     else if ($_GET['p'] === 'galery')
         view_galery();
@@ -47,11 +49,23 @@ if (isset($_GET['p'])) {
     else if ($_GET['p'] === 'my_posts')
         view_my_posts();
     else if ($_GET['p'] === 'view_post')
-        view_one_post($_GET['id']);
+        if (isset($_GET['id'])) {
+            view_one_post($_GET['id']);
+        } else {
+            view_galery();
+        }
     else if ($_GET['p'] === 'confirmation')
-        view_account_confirmation($_GET['email'], $_GET['hash']);
+        if (isset($_GET['email']) && isset($_GET['hash'])) {
+            view_account_confirmation($_GET['email'], $_GET['hash']);
+        } else {
+            view_galery();
+        }
     else if ($_GET['p'] === 'reset_password_email')
-        view_reset_password_email($_GET['email'], $_GET['hash']);
+        if (isset($_GET['email']) && isset($_GET['hash'])) {
+            view_reset_password_email($_GET['email'], $_GET['hash']);
+        } else {
+            view_galery();
+        }
     else 
         view_galery();
 } else {

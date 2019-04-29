@@ -63,38 +63,3 @@ $_SESSION['token'] = $token;
 <input type="hidden" name="token" id="token" value="<?= $token; ?>" />
 
 <script type="text/javascript" src="./app/assets/js/signup.js"></script>
-
-<!-- <div class="field">
-  <label class="label">Email</label>
-  <div class="control has-icons-left has-icons-right">
-    <input class="input is-danger" type="email" placeholder="Email input" value="hello@">
-    <span class="icon is-small is-left">
-      <i class="fas fa-envelope"></i>
-    </span>
-    <span class="icon is-small is-right">
-      <i class="fas fa-exclamation-triangle"></i>
-    </span>
-  </div>
-  <p class="help is-danger">This email is invalid</p>
-</div> -->
-
-
-
-<!-- <div class="signup_wrapper">
-    <div class="form">
-        <form id="form_create_user" action="index.php?p=signup" name="action" method="post">
-            <input placeholder="username" type="text" value="" name="username" />
-            <input placeholder="email" type="text" value="" name="email" />
-            <input placeholder="password" type="password" value="" name="pswd" />
-            <input type="submit" value="create" name="submit" />
-            <input type="hidden" name="token" id="token" value="<?= $token; ?>" />
-        </form>
-        <?php if (isset($errors) && $errors !== ''):
-            foreach ($errors as $error) {
-                echo $error;
-            } 
-        endif; ?>
-        <p>Already have an account ?</p>
-        <a href="index.php?p=login">Login</a>
-    </div>
-</div> -->

@@ -112,19 +112,30 @@ class Post {
         return $data;
     }
 
-    public static function getAllPostsAsArray() {
-        $req = Database::getPDO()->prepare('  SELECT posts.id_post, posts.photo_name, posts.id_user, likes_count, users.username
-                                FROM posts
-                                LEFT JOIN (
-                                    SELECT id_post, COUNT(*) AS likes_count
-                                    FROM likes
-                                    GROUP BY id_post
-                                ) likes_count ON likes_count.id_post = posts.id_post
-                                JOIN users ON posts.id_user = users.id_user');
-        $req->execute();                    
-        $data = $req->fetchAll(PDO::FETCH_ASSOC);
+    public static function getLastPostFromUser($id_user) {
+        $req = Database::getPDO()->prepare('  SELECT posts.id_post, posts.photo_name
+        FROM posts
+        JOIN users ON posts.id_user = users.id_user
+        WHERE posts.id_user = :id_user
+        ORDER BY posts.id_post DESC LIMIT 1');
+        $req->execute(array( "id_user" => $id_user ));
+        $data = $req->fetch();
         return $data;
     }
+
+    // public static function getLastPostFromUser($id_user) {
+    //     $req = Database::getPDO()->prepare('  SELECT posts.id_post, posts.photo_name, posts.id_user, likes_count, users.username
+    //                             FROM posts
+    //                             LEFT JOIN (
+    //                                 SELECT id_post, COUNT(*) AS likes_count
+    //                                 FROM likes
+    //                                 GROUP BY id_post
+    //                             ) likes_count ON likes_count.id_post = posts.id_post
+    //                             JOIN users ON posts.id_user = users.id_user');
+    //     $req->execute();                    
+    //     $data = $req->fetchAll(PDO::FETCH_ASSOC);
+    //     return $data;
+    // }
     
     public static function getIdUserFromIdPost($id_post) {
         $req = Database::getPDO()->prepare('    SELECT id_user FROM posts
