@@ -108,6 +108,7 @@ btnSnap.addEventListener("click", function() {
         const ajx = new XMLHttpRequest();
         ajx.onreadystatechange = function () {
             if (ajx.readyState == 4 && ajx.status == 200) {
+                console.log(ajx.responseText);
                 getThumbnails();
             }
             if (ajx.readyState == 4 && ajx.status == 400) {
