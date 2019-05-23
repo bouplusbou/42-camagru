@@ -34,7 +34,7 @@ Camagru [subject](https://github.com/bouplusbou/42-camagru/blob/master/readme_as
 ## Usage
 
 ```
-// install MAMP here https://www.mamp.info/en/downloads/
+// install MAMP https://www.mamp.info/en/downloads/
 
 // put the files in MAMP/apache2/htdocs/
 
@@ -48,16 +48,21 @@ php config/seed.php
 
 ```
 
-<!-- ## Visuals
+## Visuals
 **Galery**
 <p align="center">
-  <img src="./readme_assets/galery.png" alt="Artsy galery" width="738">
+  <img src="./readme_assets/galery.png" alt="Camagru galery" width="738">
 </p>
 
-**Cart**
+**Webcam**
 <p align="center">
-  <img src="./readme_assets/cart.png" alt="Artsy cart" width="738">
-</p> -->
+  <img src="./readme_assets/webcam.png" alt="Camagru webcam" width="738">
+</p>
+
+**Upload**
+<p align="center">
+  <img src="./readme_assets/upload.png" alt="Camagru upload" width="738">
+</p>
 
 ## Score
 [**122**/100]
